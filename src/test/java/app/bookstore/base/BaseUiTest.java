@@ -29,6 +29,13 @@ public class BaseUiTest {
 
     @BeforeSuite
     public void beforeSuite() {
+        // Ensure Docker compose stack is running locally (if available) so DB/WordPress are reachable
+        try {
+            app.bookstore.helpers.DockerComposeManager.ensureStackRunning();
+        } catch (Exception e) {
+            // Don't fail suite start here — log and continue; tests will fail later if DB is not available
+            System.err.println("Warning: failed to ensure docker-compose stack is running: " + e.getMessage());
+        }
         // playwright server is to be initiated once per whole test suite
         playwright = Playwright.create();
 

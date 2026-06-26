@@ -5,7 +5,8 @@ consumerSecret: cs_d2e37250406cf283259737c247095bdd867549bc
 #DB CONN DETAILS:
 dbUsername: wordpress
 dbPassword: wordpress
-dbConnString: jdbc:mysql://localhost:3306/wordpress
+# Host port for MySQL mapped by docker-compose is 3307 -> use that port when running via Docker
+dbConnString: jdbc:mysql://localhost:3307/wordpress
 #SELENIUM CONN DETAILS
 baseUrl: http://localhost:8080
 browser: chrome

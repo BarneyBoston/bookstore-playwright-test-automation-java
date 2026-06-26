@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3c0158cd-ad2d-4c44-9fd4-7a1b251d5ca7" name="Changes" comment="add DockerComposeManager to ensure Docker stack is running for tests; update database connection settings and refactor MainPage search functionality">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/bookstore/playwright/pages/MainPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/bookstore/playwright/pages/MainPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/app/bookstore/base/BaseUiTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/app/bookstore/base/BaseUiTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/app/bookstore/ui/mainpage/MainPageTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/app/bookstore/ui/mainpage/MainPageTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/config-local.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/config-local.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/kosto/IdeaProjects/bookstore-playwright-test-automation-java" value="3FcXfCZmfxJ4opisq6IfRyNbsMT" />
+    </persistenceIdMap>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;BarneyBoston&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/BarneyBoston/bookstore-playwright-automation-java.git&quot;,
+    &quot;accountId&quot;: &quot;05bf4f8a-dec1-4686-a7db-5d25b493c751&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="3FcXfCZmfxJ4opisq6IfRyNbsMT" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;SONARLINT_PRECOMMIT_ANALYSIS&quot;: &quot;true&quot;,
+    &quot;TestNG.MainPageTests.should_search_product_redirect_to_product_page.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/kosto/IdeaProjects/bookstore-playwright-test-automation-java&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.26666668&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kosto\IdeaProjects\bookstore-playwright-automation\src\test\resources" />
+      <recent name="C:\Users\kosto\IdeaProjects\bookstore-playwright-automation\src\main\java\app\bookstore" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="app.bookstore.config" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="MainPageTests.should_search_product_redirect_to_product_page" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="bookstore-playwright-test-automation-java" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="app.bookstore.ui.mainpage.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="app.bookstore.ui.mainpage" />
+      <option name="MAIN_CLASS_NAME" value="app.bookstore.ui.mainpage.MainPageTests" />
+      <option name="METHOD_NAME" value="should_search_product_redirect_to_product_page" />
+      <option name="TEST_OBJECT" value="METHOD" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="TestNG.MainPageTests.should_search_product_redirect_to_product_page" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.25134.95" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.25134.95" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3c0158cd-ad2d-4c44-9fd4-7a1b251d5ca7" name="Changes" comment="" />
+      <created>1782375432900</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1782375432900</updated>
+    </task>
+    <task id="LOCAL-00001" summary="initial commit with db set-up from previous project">
+      <option name="closed" value="true" />
+      <created>1782452262898</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1782452262898</updated>
+    </task>
+    <task id="LOCAL-00002" summary="update config">
+      <option name="closed" value="true" />
+      <created>1782452429533</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1782452429533</updated>
+    </task>
+    <task id="LOCAL-00003" summary="update getDb method to be safe against nullpointer exceptions">
+      <option name="closed" value="true" />
+      <created>1782455055586</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1782455055586</updated>
+    </task>
+    <task id="LOCAL-00004" summary="add Playwright integration for UI testing with BaseUiTest and related classes">
+      <option name="closed" value="true" />
+      <created>1782462666046</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1782462666046</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial commit with db set-up from previous project" />
+    <MESSAGE value="update config" />
+    <MESSAGE value="update getDb method to be safe against nullpointer exceptions" />
+    <MESSAGE value="add Playwright integration for UI testing with BaseUiTest and related classes" />
+    <option name="LAST_COMMIT_MESSAGE" value="add Playwright integration for UI testing with BaseUiTest and related classes" />
+  </component>
+</project>
