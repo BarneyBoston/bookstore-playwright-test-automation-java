@@ -25,6 +25,9 @@ public class BookStoreDB {
     }
 
     public static BookStoreDB getDb() {
+        if (bookStoreDb.get() == null) {
+            bookStoreDb.set(new BookStoreDB());
+        }
         return bookStoreDb.get();
     }
 
