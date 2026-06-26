@@ -62,6 +62,7 @@ public class BaseUiTest {
         storeThreadLocal.set(new Pages(targetPage));
 
         targetPage.navigate(Config.getInstance().getBaseUrl());
+        targetPage.waitForLoadState();
     }
 
     @AfterMethod
