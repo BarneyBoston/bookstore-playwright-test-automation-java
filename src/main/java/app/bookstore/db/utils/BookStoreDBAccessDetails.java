@@ -1,6 +1,6 @@
 package app.bookstore.db.utils;
 
-import app.bookstore.dto.Config;
+import app.bookstore.helpers.Config;
 
 public class BookStoreDBAccessDetails implements DBAccessDetail{
     private final String username;

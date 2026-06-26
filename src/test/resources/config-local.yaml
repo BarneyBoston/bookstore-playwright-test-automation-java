@@ -1,0 +1,12 @@
+#API CONN DETAILS:
+baseUri: http://localhost:8080/wp-json/wc/v3
+consumerKey: ck_a13ac568ad5104c9c8906e20447f3f0672656d60
+consumerSecret: cs_d2e37250406cf283259737c247095bdd867549bc
+#DB CONN DETAILS:
+dbUsername: wordpress
+dbPassword: wordpress
+dbConnString: jdbc:mysql://localhost:3306/wordpress
+#SELENIUM CONN DETAILS
+baseUrl: http://localhost:8080
+browser: chrome
+isHeadless: false
