@@ -16,7 +16,7 @@ public class MainPageTests extends BaseUiTest {
         store().mainPage().searchForProduct(dbTitle);
 
         assertThat(PlaywrightManager.getPage().url())
-                .describedAs("\"Searching Product should redirect to product page")
+                .describedAs("Searching Product should redirect to product page")
                 .contains("/product");
     }
 }
