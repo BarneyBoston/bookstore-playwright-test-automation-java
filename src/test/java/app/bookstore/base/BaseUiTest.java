@@ -19,8 +19,8 @@ import app.bookstore.playwright.helpers.BrowserFactory;
 
 
 public abstract class BaseUiTest {
-    protected static Playwright playwright;
-    protected static Browser browser;
+    private static volatile Playwright playwright;
+    private static volatile Browser browser;
     private static final ThreadLocal<Pages> storeThreadLocal = new ThreadLocal<>();
 
     protected Pages store() {
@@ -52,17 +52,17 @@ public abstract class BaseUiTest {
         BookStoreDB.init();
 
         BrowserContext browserContext = browser.newContext();
-        Page targetPage = browserContext.newPage();
-
-        // Register in manager
-        PlaywrightManager.setBrowserContext(browserContext);
-        PlaywrightManager.setPage(targetPage);
-
-        // Initialize pages container thread safely
-        storeThreadLocal.set(new Pages(targetPage));
-
-        targetPage.navigate(Config.getInstance().getBaseUrl());
-        targetPage.waitForLoadState();
+        try {
+            Page targetPage = browserContext.newPage();
+            PlaywrightManager.setBrowserContext(browserContext);
+            PlaywrightManager.setPage(targetPage);
+            storeThreadLocal.set(new Pages(targetPage));
+            targetPage.navigate(Config.getInstance().getBaseUrl());
+            targetPage.waitForLoadState();
+        } catch (Exception e) {
+            browserContext.close();
+            throw e;
+        }
     }
 
     @AfterMethod
