@@ -18,7 +18,7 @@ import app.bookstore.helpers.Config;
 import app.bookstore.playwright.helpers.BrowserFactory;
 
 
-public class BaseUiTest {
+public abstract class BaseUiTest {
     protected static Playwright playwright;
     protected static Browser browser;
     private static final ThreadLocal<Pages> storeThreadLocal = new ThreadLocal<>();

@@ -5,7 +5,11 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Playwright;
 
-public class BrowserFactory {
+public abstract class BrowserFactory {
+    private BrowserFactory() {
+        /* This utility class should not be instantiated */
+    }
+
 
     private static boolean isHeadless() {
         return Config.getInstance().getIsHeadless();

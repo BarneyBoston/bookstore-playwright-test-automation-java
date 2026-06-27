@@ -8,7 +8,6 @@ public abstract class PlaywrightManager {
         /* This utility class should not be instantiated */
     }
 
-
     private static final ThreadLocal<BrowserContext> browserContextThreadLocal = new ThreadLocal<>();
     private static final ThreadLocal<Page> pageThreadLocal = new ThreadLocal<>();
 
