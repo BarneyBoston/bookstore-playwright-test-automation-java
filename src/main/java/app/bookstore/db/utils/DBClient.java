@@ -57,15 +57,14 @@ public class DBClient {
 
     private synchronized List<Record> executeQueryToDataRowsList(String sqlQuery) {
         log.debug("execute: {}", sqlQuery);
-        List<Record> rowsList;
-        try (var con = connection.openConnection()) {
-            var resultSet = con.executeQuery(sqlQuery);
-            rowsList = mapResultSetToRecords(resultSet);
+        try (var con = connection.openConnection();
+             var statement = con.getConnection().createStatement();
+             var resultSet = statement.executeQuery(sqlQuery)) {
+            return mapResultSetToRecords(resultSet);
         } catch (SQLException e) {
             log.error("SQLTimeoutException when executing query: {}", sqlQuery, e);
             throw new DatabaseException("SQLTimeoutException when executing query: " + sqlQuery, e);
         }
-        return rowsList;
     }
 
     private List<Record> mapResultSetToRecords(ResultSet resultSet) throws SQLException {

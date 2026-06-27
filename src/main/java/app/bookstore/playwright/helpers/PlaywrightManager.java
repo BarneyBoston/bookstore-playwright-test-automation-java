@@ -3,7 +3,11 @@ package app.bookstore.playwright.helpers;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 
-public class PlaywrightManager {
+public abstract class PlaywrightManager {
+    private PlaywrightManager() {
+        /* This utility class should not be instantiated */
+    }
+
 
     private static final ThreadLocal<BrowserContext> browserContextThreadLocal = new ThreadLocal<>();
     private static final ThreadLocal<Page> pageThreadLocal = new ThreadLocal<>();
