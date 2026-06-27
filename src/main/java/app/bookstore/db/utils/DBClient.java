@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class DBClient {
@@ -37,7 +37,7 @@ public class DBClient {
                 .stream()
                 .map(Record::getMap)
                 .map(row -> mapper.convertValue(row, resultType))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Record getResultForQuery(String query) {
@@ -46,7 +46,7 @@ public class DBClient {
             throw new DatabaseException(String.format("Query returned %s rows, but should return 1, query: '%s'", results.size(), query));
         }
 
-        return results.get(0);
+        return results.getFirst();
     }
 
     public <T> T getResultForQuery(String query, Class<T> resultType) {
@@ -57,26 +57,32 @@ public class DBClient {
 
     private synchronized List<Record> executeQueryToDataRowsList(String sqlQuery) {
         log.debug("execute: {}", sqlQuery);
-        List<Record> rowsList = new ArrayList<>();
+        List<Record> rowsList;
         try (var con = connection.openConnection()) {
             var resultSet = con.executeQuery(sqlQuery);
-            ResultSetMetaData rsMetaData = resultSet.getMetaData();
-            try {
-                while (resultSet.next()) {
-                    Record row = new Record();
-                    for (int i = 1; i <= rsMetaData.getColumnCount(); i++) {
-                        String col = rsMetaData.getColumnName(i);
-                        row.set(col, resultSet.getString(col));
-                    }
-                    rowsList.add(row);
+            rowsList = mapResultSetToRecords(resultSet);
+        } catch (SQLException e) {
+            log.error("SQLTimeoutException when executing query: {}", sqlQuery, e);
+            throw new DatabaseException("SQLTimeoutException when executing query: " + sqlQuery, e);
+        }
+        return rowsList;
+    }
+
+    private List<Record> mapResultSetToRecords(ResultSet resultSet) throws SQLException {
+        List<Record> rowsList = new ArrayList<>();
+        ResultSetMetaData rsMetaData = resultSet.getMetaData();
+        try {
+            while (resultSet.next()) {
+                Record row = new Record();
+                for (int i = 1; i <= rsMetaData.getColumnCount(); i++) {
+                    String col = rsMetaData.getColumnName(i);
+                    row.set(col, resultSet.getString(col));
                 }
-            } catch (SQLException e) {
-                log.error("Exception when iterating results resultSet: " + e);
-                throw new DatabaseException("Exception when iterating over results result set", e);
+                rowsList.add(row);
             }
         } catch (SQLException e) {
-            log.error("SQLTimeoutException when executing query: " + sqlQuery + "\n" + e);
-            throw new DatabaseException("SQLTimeoutException when executing query: " + sqlQuery, e);
+            log.error("Exception when iterating results resultSet: ", e);
+            throw new DatabaseException("Exception when iterating over results result set", e);
         }
         return rowsList;
     }

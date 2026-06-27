@@ -18,8 +18,7 @@ class ConnectionWrapper implements AutoCloseable {
     }
 
     public ResultSet executeQuery(String sql) {
-        try {
-            var statement = connection.createStatement();
+        try (var statement = connection.createStatement()) {
             return statement.executeQuery(sql);
         } catch (SQLException e) {
             throw new DatabaseException("Error when executing SQL: " + sql, e);
@@ -27,8 +26,7 @@ class ConnectionWrapper implements AutoCloseable {
     }
 
     public int executeUpdateQuery(String sql){
-        try{
-            var statement = connection.createStatement();
+        try (var statement = connection.createStatement()) {
             return statement.executeUpdate(sql);
         } catch (SQLException e) {
             throw new DatabaseException("Error when executing SQL: " + sql, e);
