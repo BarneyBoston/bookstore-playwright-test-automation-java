@@ -7,16 +7,11 @@
     <option name="selectedModelId" value="auto" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c0158cd-ad2d-4c44-9fd4-7a1b251d5ca7" name="Changes" comment="add DockerComposeManager to ensure Docker stack is running for tests; update database connection settings and refactor MainPage search functionality">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/bookstore/playwright/pages/MainPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/bookstore/playwright/pages/MainPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/app/bookstore/base/BaseUiTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/app/bookstore/base/BaseUiTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/app/bookstore/ui/mainpage/MainPageTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/app/bookstore/ui/mainpage/MainPageTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/config-local.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/config-local.yaml" afterDir="false" />
+    <list default="true" id="3c0158cd-ad2d-4c44-9fd4-7a1b251d5ca7" name="Changes" comment="fixing sonarqube flags">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/bookstore/db/utils/ConnectionWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/bookstore/db/utils/ConnectionWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/bookstore/db/utils/DBClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/bookstore/db/utils/DBClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/bookstore/playwright/helpers/PlaywrightManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/bookstore/playwright/helpers/PlaywrightManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,7 +158,15 @@
       <option name="project" value="LOCAL" />
       <updated>1782462666046</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fixing sonarqube flags">
+      <option name="closed" value="true" />
+      <created>1782557907376</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1782557907376</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -174,6 +177,7 @@
     <MESSAGE value="update config" />
     <MESSAGE value="update getDb method to be safe against nullpointer exceptions" />
     <MESSAGE value="add Playwright integration for UI testing with BaseUiTest and related classes" />
-    <option name="LAST_COMMIT_MESSAGE" value="add Playwright integration for UI testing with BaseUiTest and related classes" />
+    <MESSAGE value="fixing sonarqube flags" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing sonarqube flags" />
   </component>
 </project>

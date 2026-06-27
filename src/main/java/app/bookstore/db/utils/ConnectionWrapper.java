@@ -1,14 +1,16 @@
 package app.bookstore.db.utils;
 
+import lombok.Getter;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 class ConnectionWrapper implements AutoCloseable {
     private final String userName;
     private final String password;
     private final String connectionString;
+    @Getter
     private Connection connection;
 
     public ConnectionWrapper(String userName, String password, String connectionString) {
@@ -16,36 +18,6 @@ class ConnectionWrapper implements AutoCloseable {
         this.password = password;
         this.connectionString = connectionString;
     }
-
-    public ResultSet executeQuery(String sql) {
-        try (var statement = connection.createStatement()) {
-            return statement.executeQuery(sql);
-        } catch (SQLException e) {
-            throw new DatabaseException("Error when executing SQL: " + sql, e);
-        }
-    }
-
-    public int executeUpdateQuery(String sql){
-        try (var statement = connection.createStatement()) {
-            return statement.executeUpdate(sql);
-        } catch (SQLException e) {
-            throw new DatabaseException("Error when executing SQL: " + sql, e);
-        }
-    }
-
-    public void executeCommit(){
-        try{
-            connection.commit();
-        } catch (SQLException e) {
-            throw new DatabaseException("Error when commit SQL procedure ", e);
-        }
-    }
-
-    /**
-     *
-     * openConnection is set without AutoCommit.
-     *
-     */
 
     public ConnectionWrapper openConnection() {
         try {
