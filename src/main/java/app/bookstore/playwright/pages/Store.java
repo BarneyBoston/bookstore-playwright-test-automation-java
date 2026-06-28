@@ -2,12 +2,13 @@ package app.bookstore.playwright.pages;
 
 import com.microsoft.playwright.Page;
 
-public class Pages {
+public class Store {
 
     private final Page page;
     private MainPage mainPage;
+    private PreviewCartPage previewCartPage;
 
-    public Pages(Page page) {
+    public Store(Page page) {
         this.page = page;
     }
 
@@ -16,5 +17,12 @@ public class Pages {
             mainPage = new MainPage(page);
         }
         return mainPage;
+    }
+
+    public PreviewCartPage previewCartPage() {
+        if (previewCartPage == null) {
+            previewCartPage = new PreviewCartPage(page);
+        }
+        return previewCartPage;
     }
 }

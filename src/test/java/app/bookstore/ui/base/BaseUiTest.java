@@ -1,9 +1,9 @@
-package app.bookstore.base;
+package app.bookstore.ui.base;
 
 import app.bookstore.db.BookStoreDB;
 import app.bookstore.playwright.helpers.NoSuchBrowserException;
 import app.bookstore.playwright.helpers.PlaywrightManager;
-import app.bookstore.playwright.pages.Pages;
+import app.bookstore.playwright.pages.Store;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
@@ -21,9 +21,9 @@ import app.bookstore.playwright.helpers.BrowserFactory;
 public abstract class BaseUiTest {
     private static volatile Playwright playwright;
     private static volatile Browser browser;
-    private static final ThreadLocal<Pages> storeThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<Store> storeThreadLocal = new ThreadLocal<>();
 
-    protected Pages store() {
+    protected Store store() {
         return storeThreadLocal.get();
     }
 
@@ -56,7 +56,7 @@ public abstract class BaseUiTest {
             Page targetPage = browserContext.newPage();
             PlaywrightManager.setBrowserContext(browserContext);
             PlaywrightManager.setPage(targetPage);
-            storeThreadLocal.set(new Pages(targetPage));
+            storeThreadLocal.set(new Store(targetPage));
             targetPage.navigate(Config.getInstance().getBaseUrl());
             targetPage.waitForLoadState();
         } catch (Exception e) {
