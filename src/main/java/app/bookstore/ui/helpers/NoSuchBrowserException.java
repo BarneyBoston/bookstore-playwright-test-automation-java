@@ -1,4 +1,4 @@
-package app.bookstore.playwright.helpers;
+package app.bookstore.ui.helpers;
 
 public class NoSuchBrowserException extends Exception {
     public NoSuchBrowserException(String browser){

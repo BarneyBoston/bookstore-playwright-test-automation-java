@@ -1,9 +1,9 @@
 package app.bookstore.ui.base;
 
 import app.bookstore.db.BookStoreDB;
-import app.bookstore.playwright.helpers.NoSuchBrowserException;
-import app.bookstore.playwright.helpers.PlaywrightManager;
-import app.bookstore.playwright.pages.Store;
+import app.bookstore.ui.helpers.NoSuchBrowserException;
+import app.bookstore.ui.helpers.PlaywrightManager;
+import app.bookstore.ui.pages.Store;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
@@ -15,7 +15,7 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import app.bookstore.helpers.Config;
-import app.bookstore.playwright.helpers.BrowserFactory;
+import app.bookstore.ui.helpers.BrowserFactory;
 
 
 public abstract class BaseUiTest {

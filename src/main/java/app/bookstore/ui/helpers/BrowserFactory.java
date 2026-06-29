@@ -1,4 +1,4 @@
-package app.bookstore.playwright.helpers;
+package app.bookstore.ui.helpers;
 
 import app.bookstore.helpers.Config;
 import com.microsoft.playwright.Browser;

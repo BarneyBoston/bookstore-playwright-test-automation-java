@@ -3,7 +3,7 @@ package app.bookstore.ui.mainpage;
 import app.bookstore.db.models.PostRecord;
 import app.bookstore.ui.base.BaseUiTest;
 import app.bookstore.db.BookStoreDB;
-import app.bookstore.playwright.helpers.PlaywrightManager;
+import app.bookstore.ui.helpers.PlaywrightManager;
 import io.qameta.allure.Epic;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -17,7 +17,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 public class MainPageTests extends BaseUiTest {
 
     @Test(description = "Verify user is on the main page")
-    public void should_all_elements_of_main_page_be_visible() {
+    public void should_user_be_on_the_main_page() {
         assertThat(PlaywrightManager.getPage()).hasURL("http://localhost:8080/");
         assertThat(PlaywrightManager.getPage()).hasTitle("Test App – Just another WordPress site");
     }

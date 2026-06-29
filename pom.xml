@@ -17,8 +17,10 @@
         <aspectj.version>1.9.23</aspectj.version>
         <!-- PLAYWRIGHT -->
         <playwright.version>1.60.0</playwright.version>
-        <!-- oauth connection library -->
+        <!-- API -->
         <oauthsgignpost.version>2.1.1</oauthsgignpost.version>
+        <!-- needs v4 for oauth1.0 -->
+        <httpclient.version>4.5.14</httpclient.version>
         <!-- UTILITIES -->
         <testng.version>7.12.0</testng.version>
         <assertj.version>3.27.7</assertj.version>
@@ -43,19 +45,6 @@
             <artifactId>playwright</artifactId>
             <version>${playwright.version}</version>
             <scope>compile</scope>
-        </dependency>
-
-        <!-- oauth connection library -->
-        <dependency>
-            <groupId>oauth.signpost</groupId>
-            <artifactId>signpost-commonshttp4</artifactId>
-            <version>${oauthsgignpost.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!-- UTILITIES -->
@@ -132,6 +121,26 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>${protobuf-java.version}</version>
+        </dependency>
+
+        <!-- API -->
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>oauth.signpost</groupId>
+            <artifactId>signpost-commonshttp4</artifactId>
+            <version>${oauthsgignpost.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
