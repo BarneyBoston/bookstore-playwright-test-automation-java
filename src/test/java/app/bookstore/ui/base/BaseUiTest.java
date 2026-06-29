@@ -9,6 +9,8 @@ import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import io.qameta.allure.Attachment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -22,6 +24,7 @@ public abstract class BaseUiTest {
     private static volatile Playwright playwright;
     private static volatile Browser browser;
     private static final ThreadLocal<Store> storeThreadLocal = new ThreadLocal<>();
+    private static final Logger log = LoggerFactory.getLogger(BaseUiTest.class);
 
     protected Store store() {
         return storeThreadLocal.get();
@@ -34,7 +37,7 @@ public abstract class BaseUiTest {
             app.bookstore.helpers.DockerComposeManager.ensureStackRunning();
         } catch (Exception e) {
             // Don't fail suite start here — log and continue; tests will fail later if DB is not available
-            System.err.println("Warning: failed to ensure docker-compose stack is running: " + e.getMessage());
+            log.warn("Warning: failed to ensure docker-compose stack is running: {}", e.getMessage());
         }
         // playwright server is to be initiated once per whole test suite
         playwright = Playwright.create();

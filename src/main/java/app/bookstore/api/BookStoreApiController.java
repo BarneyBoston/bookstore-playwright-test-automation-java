@@ -8,8 +8,12 @@ import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.options.RequestOptions;
 import io.qameta.allure.Step;
+import io.qameta.allure.Allure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import oauth.signpost.exception.OAuthException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -31,6 +35,7 @@ public class BookStoreApiController {
     private static final String CUSTOMERS = "/customers";
     private static final String ORDERS = "/orders";
     private static final String REVIEWS = "/products/reviews";
+    private static final Logger log = LoggerFactory.getLogger(BookStoreApiController.class);
 
     public BookStoreApiController(APIRequestContext request) {
         Config config = Config.getInstance();
@@ -40,7 +45,7 @@ public class BookStoreApiController {
         this.baseUri = config.getBaseUri();
     }
 
-    private String getAuthHeader(String method, String url) throws Exception {
+    private String getAuthHeader(String method, String url) throws OAuthException {
         OAuthConsumer consumer = new CommonsHttpOAuthConsumer(consumerKey, consumerSecret);
         return switch (method.toUpperCase()) {
             case "GET" -> {
@@ -79,8 +84,8 @@ public class BookStoreApiController {
 
     @Step("GET " + PRODUCTS)
     public APIResponse getProductsResponse() {
-        return request.get(baseUri + PRODUCTS, RequestOptions.create()
-                .setHeader("Authorization", auth("GET", PRODUCTS)));
+        return executeRequest("GET", baseUri + PRODUCTS,
+                RequestOptions.create().setHeader("Authorization", auth("GET", PRODUCTS)), null);
     }
 
     public List<ProductResponse> getProducts() {
@@ -89,9 +94,11 @@ public class BookStoreApiController {
 
     @Step("POST " + PRODUCTS)
     public APIResponse postProductsResponse(ProductRequest body) {
-        return request.post(baseUri + PRODUCTS, RequestOptions.create()
-                .setHeader("Authorization", auth("POST", PRODUCTS))
-                .setData(body));
+        String bodyJson = toJson(body);
+        return executeRequest("POST", baseUri + PRODUCTS,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("POST", PRODUCTS))
+                        .setData(bodyJson), bodyJson);
     }
 
     public ProductResponse postProducts(ProductRequest body) {
@@ -100,9 +107,11 @@ public class BookStoreApiController {
 
     @Step("PUT " + PRODUCTS + "/{id}")
     public APIResponse updateProductsResponse(String id, ProductRequest body) {
-        return request.put(baseUri + PRODUCTS + "/" + id, RequestOptions.create()
-                .setHeader("Authorization", auth("PUT", PRODUCTS + "/" + id))
-                .setData(body));
+        String bodyJson = toJson(body);
+        return executeRequest("PUT", baseUri + PRODUCTS + "/" + id,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("PUT", PRODUCTS + "/" + id))
+                        .setData(bodyJson), bodyJson);
     }
 
     public ProductResponse updateProduct(String id, ProductRequest body) {
@@ -111,8 +120,78 @@ public class BookStoreApiController {
 
     @Step("DELETE " + PRODUCTS + "/{id}")
     public APIResponse deleteProductsResponse(String id) {
-        return request.delete(baseUri + PRODUCTS + "/" + id, RequestOptions.create()
-                .setHeader("Authorization", auth("DELETE", PRODUCTS + "/" + id)));
+        return executeRequest("DELETE", baseUri + PRODUCTS + "/" + id,
+                RequestOptions.create().setHeader("Authorization", auth("DELETE", PRODUCTS + "/" + id)), null);
+    }
+
+    /**
+     * Execute HTTP request via Playwright's APIRequestContext and log request/response
+     * both to stdout and as Allure attachments so logs are available locally and in CI reports.
+     *
+     * @param method  HTTP method (GET/POST/PUT/DELETE)
+     * @param url     full URL
+     * @param options RequestOptions instance (can be null)
+     * @param requestBody optional serialized request body (null if none)
+     * @return APIResponse returned by Playwright
+     */
+    private APIResponse executeRequest(String method, String url, RequestOptions options, String requestBody) {
+        String shortRequest = method + " " + url;
+        try {
+            // Log request
+            StringBuilder reqLog = new StringBuilder();
+            reqLog.append("REQUEST: ").append(shortRequest).append(System.lineSeparator());
+            if (requestBody != null) {
+                reqLog.append("Body:\n").append(requestBody).append(System.lineSeparator());
+            }
+
+            String reqContent = reqLog.toString();
+                    Allure.addAttachment("API Request - " + shortRequest, reqContent);
+                    if (log.isInfoEnabled()) {
+                        log.info("API Request - {}\n{}", shortRequest, reqContent);
+                    }
+
+                    APIResponse response = switch (method.toUpperCase()) {
+                        case "GET" -> request.get(url, options);
+                        case "POST" -> request.post(url, options);
+                        case "PUT" -> request.put(url, options);
+                        case "DELETE" -> request.delete(url, options);
+                        default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+                    };
+
+            String responseBody = getResponseTextSafe(response);
+
+            String respContent = "RESPONSE: " + response.status() + " " + response.statusText() + System.lineSeparator() +
+                    "URL: " + url + System.lineSeparator() +
+                    "Body:\n" + responseBody + System.lineSeparator();
+            Allure.addAttachment("API Response - " + shortRequest + " (status=" + response.status() + ")", respContent);
+            if (log.isInfoEnabled()) {
+                log.info("API Response - {} (status={})\n{}", shortRequest, response.status(), respContent);
+            }
+
+            return response;
+        } catch (RuntimeException re) {
+            // Attach exception to Allure with context and rethrow with contextual information
+            String err = "REQUEST FAILED: " + shortRequest + " -> " + re.getMessage();
+            Allure.addAttachment("API Error - " + shortRequest, err + System.lineSeparator() + "Exception: " + re.getClass().getName() + ": " + re.getMessage());
+            throw new RuntimeException("Failed to execute request: " + shortRequest, re);
+        }
+    }
+
+    // Extracted helper to safely read response text and avoid duplicating try/catch
+    private String getResponseTextSafe(APIResponse response) {
+        try {
+            return response.text();
+        } catch (Exception e) {
+            return "<unavailable: " + e.getMessage() + ">";
+        }
+    }
+
+    private String toJson(Object obj) {
+        try {
+            return mapper.writeValueAsString(obj);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to serialize request body", e);
+        }
     }
 
     private <T> T deserialize(APIResponse response, Class<T> clazz) {
