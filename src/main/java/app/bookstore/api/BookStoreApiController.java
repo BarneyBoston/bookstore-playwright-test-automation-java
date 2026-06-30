@@ -4,6 +4,7 @@ import app.bookstore.api.product.ProductRequest;
 import app.bookstore.api.product.ProductResponse;
 import app.bookstore.helpers.Config;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.options.RequestOptions;
@@ -25,7 +26,7 @@ import java.util.List;
 public class BookStoreApiController {
 
     private final APIRequestContext request;
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
     private final String consumerKey;
     private final String consumerSecret;
     private final String baseUri;
@@ -43,6 +44,7 @@ public class BookStoreApiController {
         this.consumerKey = config.getConsumerKey();
         this.consumerSecret = config.getConsumerSecret();
         this.baseUri = config.getBaseUri();
+        this.mapper = new ObjectMapper().registerModule(new JavaTimeModule());
     }
 
     private String getAuthHeader(String method, String url) throws OAuthException {

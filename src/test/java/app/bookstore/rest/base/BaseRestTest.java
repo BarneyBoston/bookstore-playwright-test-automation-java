@@ -23,7 +23,7 @@ public abstract class BaseRestTest {
     private static final List<Playwright> allPlaywrightInstances = new CopyOnWriteArrayList<>();
     private static final ThreadLocal<APIRequestContext> requestThreadLocal = new ThreadLocal<>();
     private static final ThreadLocal<BookStoreApiController> controllerThreadLocal = new ThreadLocal<>();
-    private static final Logger log = LoggerFactory.getLogger(BaseRestTest.class);
+    public static final Logger log = LoggerFactory.getLogger(BaseRestTest.class);
 
 
     protected APIRequestContext request() {
