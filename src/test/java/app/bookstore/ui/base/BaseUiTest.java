@@ -19,10 +19,14 @@ import org.testng.annotations.BeforeSuite;
 import app.bookstore.helpers.Config;
 import app.bookstore.ui.helpers.BrowserFactory;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 
 public abstract class BaseUiTest {
-    private static volatile Playwright playwright;
+    private static final ThreadLocal<Playwright> playwrightThreadLocal = new ThreadLocal<>();
     private static volatile Browser browser;
+    private static final List<Playwright> allPlaywrightInstances = new CopyOnWriteArrayList<>();
     private static final ThreadLocal<Store> storeThreadLocal = new ThreadLocal<>();
     private static final Logger log = LoggerFactory.getLogger(BaseUiTest.class);
 
@@ -39,20 +43,30 @@ public abstract class BaseUiTest {
             // Don't fail suite start here — log and continue; tests will fail later if DB is not available
             log.warn("Warning: failed to ensure docker-compose stack is running: {}", e.getMessage());
         }
-        // playwright server is to be initiated once per whole test suite
-        playwright = Playwright.create();
-
-        var browserType = Config.getInstance().getBrowser();
-        try {
-            browser = BrowserFactory.getBrowser(playwright, browserType);
-        } catch (NoSuchBrowserException e) {
-            throw new RuntimeException("Failed to initialize browser factory", e);
-        }
     }
 
     @BeforeMethod
     public void setUp() {
         BookStoreDB.init();
+
+        if (playwrightThreadLocal.get() == null) {
+            Playwright pw = Playwright.create();
+            playwrightThreadLocal.set(pw);
+            allPlaywrightInstances.add(pw);
+        }
+
+        if (browser == null) {
+            synchronized (BaseUiTest.class) {
+                if (browser == null) {
+                    var browserType = Config.getInstance().getBrowser();
+                    try {
+                        browser = BrowserFactory.getBrowser(playwrightThreadLocal.get(), browserType);
+                    } catch (NoSuchBrowserException e) {
+                        throw new RuntimeException("Failed to initialize browser factory", e);
+                    }
+                }
+            }
+        }
 
         BrowserContext browserContext = browser.newContext();
         try {
@@ -73,7 +87,6 @@ public abstract class BaseUiTest {
         if (!testResult.isSuccess() && testResult.getStatus() != ITestResult.SKIP && PlaywrightManager.getPage() != null) {
             saveScreenshot();
         }
-
         PlaywrightManager.cleanUp();
         storeThreadLocal.remove();
         BookStoreDB.remove();
@@ -82,7 +95,8 @@ public abstract class BaseUiTest {
     @AfterSuite
     public void afterSuite() {
         if (browser != null) browser.close();
-        if (playwright != null) playwright.close();
+        allPlaywrightInstances.forEach(Playwright::close);
+        allPlaywrightInstances.clear();
     }
 
     @SuppressWarnings("UnusedReturnValue")
