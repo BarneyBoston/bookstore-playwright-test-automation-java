@@ -8,15 +8,19 @@ import com.microsoft.playwright.Playwright;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class BaseRestTest {
 
     private static final ThreadLocal<Playwright> playwrightThreadLocal = new ThreadLocal<>();
+    private static final List<Playwright> allPlaywrightInstances = new CopyOnWriteArrayList<>();
     private static final ThreadLocal<APIRequestContext> requestThreadLocal = new ThreadLocal<>();
     private static final ThreadLocal<BookStoreApiController> controllerThreadLocal = new ThreadLocal<>();
     private static final Logger log = LoggerFactory.getLogger(BaseRestTest.class);
@@ -31,7 +35,7 @@ public abstract class BaseRestTest {
     }
 
     @BeforeSuite
-    public void ensureDockerRunsLocally(){
+    public void beforeSuite(){
         // Ensure Docker compose stack is running locally (if available) so DB/WordPress are reachable
         try {
             app.bookstore.helpers.DockerComposeManager.ensureStackRunning();
@@ -45,10 +49,13 @@ public abstract class BaseRestTest {
     public void setup() {
         BookStoreDB.init();
 
-        Playwright playwright = Playwright.create();
-        playwrightThreadLocal.set(playwright);
+        if (playwrightThreadLocal.get() == null) {
+            Playwright pw = Playwright.create();
+            playwrightThreadLocal.set(pw);
+            allPlaywrightInstances.add(pw);
+        }
 
-        APIRequestContext context = playwright.request().newContext(
+        APIRequestContext context = playwrightThreadLocal.get().request().newContext(
                 new APIRequest.NewContextOptions()
                         .setExtraHTTPHeaders(buildAuthHeaders())
         );
@@ -59,13 +66,16 @@ public abstract class BaseRestTest {
     @AfterMethod
     public void cleanUp() {
         if (request() != null) request().dispose();
-        if (playwrightThreadLocal.get() != null) playwrightThreadLocal.get().close();
         requestThreadLocal.remove();
-        playwrightThreadLocal.remove();
         controllerThreadLocal.remove();
         BookStoreDB.remove();
     }
 
+    @AfterSuite
+    public void afterSuite() {
+        allPlaywrightInstances.forEach(Playwright::close);
+        allPlaywrightInstances.clear();
+    }
 
     private Map<String, String> buildAuthHeaders() {
         Map<String, String> headers = new HashMap<>();
