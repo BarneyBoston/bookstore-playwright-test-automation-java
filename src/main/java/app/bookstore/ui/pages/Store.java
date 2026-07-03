@@ -7,6 +7,7 @@ public class Store {
     private final Page page;
     private MainPage mainPage;
     private PreviewCartPage previewCartPage;
+    private NavigationBar navigationBar;
 
     public Store(Page page) {
         this.page = page;
@@ -24,5 +25,12 @@ public class Store {
             previewCartPage = new PreviewCartPage(page);
         }
         return previewCartPage;
+    }
+
+    public NavigationBar navigationBar(){
+        if (navigationBar == null) {
+            navigationBar = new NavigationBar(page);
+        }
+        return navigationBar;
     }
 }
