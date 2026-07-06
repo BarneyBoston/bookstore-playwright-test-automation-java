@@ -1,5 +1,7 @@
 package app.bookstore.api;
 
+import app.bookstore.api.coupon.CouponResponse;
+import app.bookstore.api.coupon.PostCouponRequest;
 import app.bookstore.api.product.ProductRequest;
 import app.bookstore.api.product.ProductResponse;
 import app.bookstore.helpers.Config;
@@ -125,6 +127,23 @@ public class BookStoreApiController {
         return executeRequest("DELETE", baseUri + PRODUCTS + "/" + id,
                 RequestOptions.create().setHeader("Authorization", auth("DELETE", PRODUCTS + "/" + id)), null);
     }
+
+    // ── COUPONS ──────────────────────────────────────────
+
+    @Step("POST " + COUPONS)
+    public APIResponse postCouponsResponse(PostCouponRequest body) {
+        String bodyJson = toJson(body);
+        return executeRequest("POST", baseUri + COUPONS,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("POST", PRODUCTS))
+                        .setData(bodyJson), bodyJson);
+    }
+
+    public CouponResponse postCoupon(PostCouponRequest body) {
+        return deserialize(postCouponsResponse(body), CouponResponse.class);
+    }
+
+    // ── HELPERS ──────────────────────────────────────────
 
     /**
      * Execute HTTP request via Playwright's APIRequestContext and log request/response

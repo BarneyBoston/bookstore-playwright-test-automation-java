@@ -1,13 +1,11 @@
 package app.bookstore.ui.base;
 
+import app.bookstore.api.BookStoreApiController;
 import app.bookstore.db.BookStoreDB;
 import app.bookstore.ui.helpers.NoSuchBrowserException;
 import app.bookstore.ui.helpers.PlaywrightManager;
 import app.bookstore.ui.pages.Store;
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserContext;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.*;
 import io.qameta.allure.Attachment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +17,9 @@ import org.testng.annotations.BeforeSuite;
 import app.bookstore.helpers.Config;
 import app.bookstore.ui.helpers.BrowserFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
@@ -29,6 +29,12 @@ public abstract class BaseUiTest {
     private static final List<Playwright> allPlaywrightInstances = new CopyOnWriteArrayList<>();
     private static final ThreadLocal<Store> storeThreadLocal = new ThreadLocal<>();
     private static final Logger log = LoggerFactory.getLogger(BaseUiTest.class);
+    private static final ThreadLocal<APIRequestContext> requestThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<BookStoreApiController> controllerThreadLocal = new ThreadLocal<>();
+
+    protected BookStoreApiController controller() {
+        return controllerThreadLocal.get();
+    }
 
     protected Store store() {
         return storeThreadLocal.get();
@@ -80,6 +86,13 @@ public abstract class BaseUiTest {
             browserContext.close();
             throw e;
         }
+
+        APIRequestContext context = playwrightThreadLocal.get().request().newContext(
+                new APIRequest.NewContextOptions()
+                        .setExtraHTTPHeaders(buildAuthHeaders())
+        );
+        requestThreadLocal.set(context);
+        controllerThreadLocal.set(new BookStoreApiController(context));
     }
 
     @AfterMethod
@@ -104,5 +117,11 @@ public abstract class BaseUiTest {
     public byte[] saveScreenshot() {
         // In Playwright saving screenshot as a byte table is native
         return PlaywrightManager.getPage().screenshot();
+    }
+
+    private Map<String, String> buildAuthHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        return headers;
     }
 }
