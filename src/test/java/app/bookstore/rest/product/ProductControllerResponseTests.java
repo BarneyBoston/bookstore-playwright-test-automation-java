@@ -4,7 +4,7 @@ import app.bookstore.api.product.ProductRequest;
 import app.bookstore.api.product.ProductResponse;
 import app.bookstore.db.BookStoreDB;
 import app.bookstore.db.models.ProductRecord;
-import app.bookstore.rest.base.BaseRestTest;
+import app.bookstore.rest.BaseRestTest;
 import io.qameta.allure.Epic;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.AfterClass;

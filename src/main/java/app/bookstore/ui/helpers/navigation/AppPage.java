@@ -6,7 +6,8 @@ public enum AppPage {
     LOST_PASSWORD("/my-account/lost-password/"),
     WISHLIST("/wishlist/"),
     PRODUCT("/product/%s"),
-    COUPON("/coupons");
+    COUPON("/coupons"),
+    CART("/cart");
 
     private final String pathTemplate;
 

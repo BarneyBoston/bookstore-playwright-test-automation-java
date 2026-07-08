@@ -10,6 +10,7 @@ public class Store {
     private MainPage mainPage;
     private PreviewCartPage previewCartPage;
     private NavigationBar navigationBar;
+    private CartPage cartPage;
 
     public Store(Page page) {
         this.page = page;
@@ -39,5 +40,12 @@ public class Store {
             navigationBar = new NavigationBar(page);
         }
         return navigationBar;
+    }
+
+    public CartPage cartPage() {
+        if (cartPage == null) {
+            cartPage = new CartPage(page);
+        }
+        return cartPage;
     }
 }

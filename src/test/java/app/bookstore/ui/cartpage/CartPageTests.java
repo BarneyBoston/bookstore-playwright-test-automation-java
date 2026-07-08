@@ -1,15 +1,20 @@
 package app.bookstore.ui.cartpage;
 
 import app.bookstore.api.coupon.PostCouponRequest;
-import app.bookstore.ui.base.BaseUiTest;
+import app.bookstore.ui.BaseUiTest;
+import app.bookstore.ui.helpers.UiAssertions;
 import app.bookstore.ui.helpers.navigation.AppPage;
+import app.bookstore.ui.pages.CartPage;
+import app.bookstore.ui.pages.NavigationBar;
 import io.qameta.allure.Epic;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import static app.bookstore.ui.helpers.UiAssertions.el;
 
 @Epic("Cart Page Tests")
 public class CartPageTests extends BaseUiTest {
-    @BeforeClass
+    @BeforeMethod(dependsOnMethods = "setUp")
     public void createCouponWithApi() {
         var request = PostCouponRequest.builder()
                 .code("testCoupon")
@@ -22,8 +27,13 @@ public class CartPageTests extends BaseUiTest {
 
     @Test(description = "Verify all essential UI elements are visible on the cart page.")
     public void should_cart_page_have_proper_elements_test() {
-        store().navigation().goTo(AppPage.COUPON);
+        store().navigation().goTo(AppPage.CART);
+        CartPage cartPage = store().cartPage();
 
+        UiAssertions.assertAllVisible(
+                el("Cart text", cartPage.getCartText()),
+                el("Cart table", cartPage.getCartTable()),
+                el("Cart totals table", cartPage.getCartTotalsTable()));
     }
 
 //    @Test(description = "Ensure product name in the cart matches the selected product.")

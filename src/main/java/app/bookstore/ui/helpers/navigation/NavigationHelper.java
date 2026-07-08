@@ -12,7 +12,7 @@ public class NavigationHelper {
     }
 
     public void goTo(AppPage appPage) {
-        String url = Config.getInstance().getBaseUrl() + appPage;
+        String url = Config.getInstance().getBaseUrl() + appPage.path();
         page.navigate(url);
         page.waitForLoadState();
     }

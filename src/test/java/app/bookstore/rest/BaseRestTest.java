@@ -1,4 +1,4 @@
-package app.bookstore.rest.base;
+package app.bookstore.rest;
 
 import app.bookstore.api.BookStoreApiController;
 import app.bookstore.db.BookStoreDB;

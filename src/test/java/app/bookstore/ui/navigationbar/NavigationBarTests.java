@@ -1,7 +1,7 @@
 package app.bookstore.ui.navigationbar;
 
 import app.bookstore.db.BookStoreDB;
-import app.bookstore.ui.base.BaseUiTest;
+import app.bookstore.ui.BaseUiTest;
 import app.bookstore.ui.helpers.UiAssertions;
 import app.bookstore.ui.helpers.navigation.AppPage;
 import app.bookstore.ui.pages.NavigationBar;

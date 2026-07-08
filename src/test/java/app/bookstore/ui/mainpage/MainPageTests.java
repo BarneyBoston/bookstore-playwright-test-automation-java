@@ -1,7 +1,7 @@
 package app.bookstore.ui.mainpage;
 
 import app.bookstore.db.models.PostRecord;
-import app.bookstore.ui.base.BaseUiTest;
+import app.bookstore.ui.BaseUiTest;
 import app.bookstore.db.BookStoreDB;
 import app.bookstore.ui.helpers.PlaywrightManager;
 import io.qameta.allure.Epic;

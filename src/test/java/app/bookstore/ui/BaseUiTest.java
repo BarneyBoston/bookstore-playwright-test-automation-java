@@ -1,4 +1,4 @@
-package app.bookstore.ui.base;
+package app.bookstore.ui;
 
 import app.bookstore.api.BookStoreApiController;
 import app.bookstore.db.BookStoreDB;
