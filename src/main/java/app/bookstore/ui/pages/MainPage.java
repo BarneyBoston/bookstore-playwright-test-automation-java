@@ -7,6 +7,7 @@ import com.microsoft.playwright.options.SelectOption;
 import io.qameta.allure.Step;
 
 import java.util.List;
+import java.util.Random;
 
 public class MainPage extends BasePage {
 
@@ -15,6 +16,7 @@ public class MainPage extends BasePage {
     private final Locator productTitles;
     private final Locator sortDropdown;
     private final Locator priceContainers;
+    private final Locator addToCartButtons;
 
     public MainPage(Page page) {
         super(page);
@@ -24,6 +26,7 @@ public class MainPage extends BasePage {
         this.productTitles = page.locator(".woocommerce-loop-product__title");
         this.sortDropdown = page.getByLabel("Shop order");
         this.priceContainers = page.locator("[class='price']");
+        this.addToCartButtons = page.locator(".add_to_cart_button");
 
     }
 
@@ -66,5 +69,18 @@ public class MainPage extends BasePage {
         page.locator("#main").getByRole(AriaRole.LINK, new Locator.GetByRoleOptions()
                 .setName(String.format("Add “%s” to your cart", bookName))).click();
         waitForPageToLoad();
+    }
+
+    @Step("Add random product to cart")
+    public void addRandomToCart() {
+        int count = addToCartButtons.count();
+
+        if (count == 0) {
+            throw new IllegalStateException("No 'add to cart' buttons available");
+        }
+
+        int randomIndex = new Random().nextInt(count);
+        addToCartButtons.nth(randomIndex).click();
+        waitForNetworkIdle();
     }
 }

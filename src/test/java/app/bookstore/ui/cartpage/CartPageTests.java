@@ -1,16 +1,19 @@
 package app.bookstore.ui.cartpage;
 
 import app.bookstore.api.coupon.PostCouponRequest;
+import app.bookstore.db.BookStoreDB;
+import app.bookstore.db.models.PostRecord;
 import app.bookstore.ui.BaseUiTest;
 import app.bookstore.ui.helpers.UiAssertions;
 import app.bookstore.ui.helpers.navigation.AppPage;
 import app.bookstore.ui.pages.CartPage;
-import app.bookstore.ui.pages.NavigationBar;
 import io.qameta.allure.Epic;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static app.bookstore.ui.helpers.UiAssertions.el;
+import static org.assertj.core.api.Assertions.assertThat;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 @Epic("Cart Page Tests")
 public class CartPageTests extends BaseUiTest {
@@ -27,6 +30,7 @@ public class CartPageTests extends BaseUiTest {
 
     @Test(description = "Verify all essential UI elements are visible on the cart page.")
     public void should_cart_page_have_proper_elements_test() {
+        store().mainPage().addRandomToCart();
         store().navigation().goTo(AppPage.CART);
         CartPage cartPage = store().cartPage();
 
@@ -36,31 +40,33 @@ public class CartPageTests extends BaseUiTest {
                 el("Cart totals table", cartPage.getCartTotalsTable()));
     }
 
-//    @Test(description = "Ensure product name in the cart matches the selected product.")
-//    public void should_product_name_match_chosen_product_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .assertProductNameMatchChosenProduct(bookName);
-//    }
-//
-//    @Test(description = "Ensure names of multiple products in the cart match the ones selected.")
-//    public void should_multiple_product_names_match_chosen_products_test() {
-//        var bookNames = BookStoreDB.getDb().selectActiveProducts().stream().map(PostRecord::getName).toList();
-//        var bookName1 = bookNames.get(0);
-//        var bookName2 = bookNames.get(1);
-//
-//        mainPage
-//                .addToCart(bookName1)
-//                .closePreviewCart()
-//                .addToCart(bookName2)
-//                .closePreviewCart()
-//                .getNavigationBar()
-//                .clickCartPageButton()
-//                .viewMyCart()
-//                .assertProductNamesMatchChosenProducts(List.of(bookName1, bookName2));
-//    }
+    @Test(description = "Ensure product name in the cart matches the selected product.")
+    public void should_product_name_match_chosen_product_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+
+        CartPage cartPage = store().cartPage();
+        assertThat(cartPage.getProductNames().nth(0).innerText()).isEqualTo(bookName);
+    }
+
+    @Test(description = "Ensure names of multiple products in the cart match the ones selected.")
+    public void should_multiple_product_names_match_chosen_products_test() {
+        var bookNames = BookStoreDB.getDb().selectActiveProducts().stream().map(PostRecord::getName).toList();
+        var bookName1 = bookNames.getFirst();
+        var bookName2 = bookNames.get(1);
+
+        store().mainPage().addToCart(bookName1);
+        store().previewCartPage().closePreview();
+        store().mainPage().addToCart(bookName2);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+
+        CartPage cartPage = store().cartPage();
+        assertThat(cartPage.getProductNames()).hasText(new String[]{bookName1, bookName2});
+    }
 //
 //    @Test(description = "Verify update cart triggers confirmation message after quantity change.")
 //    public void should_update_cart_trigger_pop_up_test() {
