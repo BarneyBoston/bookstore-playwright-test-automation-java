@@ -12,11 +12,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static app.bookstore.ui.helpers.UiAssertions.el;
-import static org.assertj.core.api.Assertions.assertThat;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("Cart Page Tests")
 public class CartPageTests extends BaseUiTest {
+
     @BeforeMethod(dependsOnMethods = "setUp")
     public void createCouponWithApi() {
         var request = PostCouponRequest.builder()
@@ -64,20 +65,21 @@ public class CartPageTests extends BaseUiTest {
         store().previewCartPage().waitForPreviewCart();
         store().navigation().goTo(AppPage.CART);
 
-        CartPage cartPage = store().cartPage();
-        assertThat(cartPage.getProductNames()).hasText(new String[]{bookName1, bookName2});
+        assertThat(store().cartPage().getProductNames()).hasText(new String[]{bookName1, bookName2});
     }
-//
-//    @Test(description = "Verify update cart triggers confirmation message after quantity change.")
-//    public void should_update_cart_trigger_pop_up_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .increaseQuantityOfProductBy(0, 2)
-//                .updateCart()
-//                .assertMessageIs("Cart updated");
-//    }
+
+    @Test(description = "Verify update cart triggers confirmation message after quantity change.")
+    public void should_update_cart_trigger_pop_up_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().setQuantityOfProductTo(0,3);
+        store().cartPage().updateCart();
+
+        assertThat(store().notifications().getSuccessMessage().innerText()).isEqualTo("Cart updated.");
+    }
 //
 //    @Test(description = "Verify that 'Update Cart' button is disabled before any change.")
 //    public void should_update_cart_without_prior_updated_be_disabled_test() {

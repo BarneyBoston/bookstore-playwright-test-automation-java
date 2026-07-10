@@ -1,6 +1,9 @@
-package app.bookstore.ui.pages;
+package app.bookstore.ui.pages.helpers;
 
 import app.bookstore.ui.helpers.navigation.NavigationHelper;
+import app.bookstore.ui.pages.CartPage;
+import app.bookstore.ui.pages.MainPage;
+import app.bookstore.ui.pages.PreviewCartPage;
 import com.microsoft.playwright.Page;
 
 public class Store {
@@ -11,6 +14,7 @@ public class Store {
     private PreviewCartPage previewCartPage;
     private NavigationBar navigationBar;
     private CartPage cartPage;
+    private Notifications notifications;
 
     public Store(Page page) {
         this.page = page;
@@ -47,5 +51,12 @@ public class Store {
             cartPage = new CartPage(page);
         }
         return cartPage;
+    }
+
+    public Notifications notifications() {
+        if (notifications == null) {
+            notifications = new Notifications(page);
+        }
+        return notifications;
     }
 }

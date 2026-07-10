@@ -1,6 +1,7 @@
 package app.bookstore.ui.pages;
 
 import app.bookstore.ui.helpers.UiAssertions;
+import app.bookstore.ui.pages.helpers.BasePage;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;

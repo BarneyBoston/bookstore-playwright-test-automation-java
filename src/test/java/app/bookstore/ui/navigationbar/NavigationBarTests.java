@@ -4,7 +4,7 @@ import app.bookstore.db.BookStoreDB;
 import app.bookstore.ui.BaseUiTest;
 import app.bookstore.ui.helpers.UiAssertions;
 import app.bookstore.ui.helpers.navigation.AppPage;
-import app.bookstore.ui.pages.NavigationBar;
+import app.bookstore.ui.pages.helpers.NavigationBar;
 import io.qameta.allure.Epic;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

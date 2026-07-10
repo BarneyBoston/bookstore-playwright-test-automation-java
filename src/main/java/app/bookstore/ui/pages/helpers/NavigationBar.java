@@ -1,4 +1,4 @@
-package app.bookstore.ui.pages;
+package app.bookstore.ui.pages.helpers;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;

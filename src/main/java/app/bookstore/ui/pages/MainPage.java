@@ -1,15 +1,19 @@
 package app.bookstore.ui.pages;
 
+import app.bookstore.ui.pages.helpers.BasePage;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.SelectOption;
 import io.qameta.allure.Step;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 
 public class MainPage extends BasePage {
+
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     private final Locator searchInput;
     private final Locator submitButton;
@@ -79,7 +83,7 @@ public class MainPage extends BasePage {
             throw new IllegalStateException("No 'add to cart' buttons available");
         }
 
-        int randomIndex = new Random().nextInt(count);
+        int randomIndex = RANDOM.nextInt(count);
         addToCartButtons.nth(randomIndex).click();
         waitForNetworkIdle();
     }

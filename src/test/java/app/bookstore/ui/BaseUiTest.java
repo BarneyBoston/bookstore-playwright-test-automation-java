@@ -4,7 +4,7 @@ import app.bookstore.api.BookStoreApiController;
 import app.bookstore.db.BookStoreDB;
 import app.bookstore.ui.helpers.NoSuchBrowserException;
 import app.bookstore.ui.helpers.PlaywrightManager;
-import app.bookstore.ui.pages.Store;
+import app.bookstore.ui.pages.helpers.Store;
 import com.microsoft.playwright.*;
 import io.qameta.allure.Attachment;
 import org.slf4j.Logger;
