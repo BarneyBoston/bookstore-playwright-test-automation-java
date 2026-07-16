@@ -8,6 +8,7 @@ import app.bookstore.ui.helpers.UiAssertions;
 import app.bookstore.ui.helpers.navigation.AppPage;
 import app.bookstore.ui.pages.CartPage;
 import io.qameta.allure.Epic;
+import org.assertj.core.api.SoftAssertions;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -80,104 +81,132 @@ public class CartPageTests extends BaseUiTest {
 
         assertThat(store().notifications().getSuccessMessage().innerText()).isEqualTo("Cart updated.");
     }
-//
-//    @Test(description = "Verify that 'Update Cart' button is disabled before any change.")
-//    public void should_update_cart_without_prior_updated_be_disabled_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .assertUpdateCartButtonIsDisabled();
-//    }
-//
-//    @Test(description = "Verify increasing quantity for one product is correctly reflected in the cart.")
-//    public void should_increase_quantity_for_one_product_work_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .increaseQuantityOfProductBy(0, 2)
-//                .updateCart()
-//                .assertQuantityIs(0, "3");
-//    }
-//
-//    @Test(description = "Verify increasing quantity for multiple products is correctly updated.")
-//    public void should_increase_quantity_for_multiple_products_work_test() {
-//        var bookNames = BookStoreDB.getDb().selectActiveProducts().stream().map(PostRecord::getName).toList();
-//        var bookName1 = bookNames.get(0);
-//        var bookName2 = bookNames.get(1);
-//
-//        mainPage
-//                .addToCart(bookName1)
-//                .closePreviewCart()
-//                .addToCart(bookName2)
-//                .closePreviewCart()
-//                .getNavigationBar()
-//                .clickCartPageButton()
-//                .viewMyCart()
-//                .increaseQuantityOfProductBy(0, 2)
-//                .increaseQuantityOfProductBy(1, 4)
-//                .updateCart()
-//                .assertQuantityIs(0, "3")
-//                .assertQuantityIs(1, "5");
-//    }
-//
-//    @Test(description = "Verify reducing quantity for a single product updates correctly.")
-//    public void should_reduce_quantity_for_one_product_work_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .increaseQuantityOfProductBy(0, 5)
-//                .reduceQuantityOfProductBy(0, 2)
-//                .updateCart()
-//                .assertQuantityIs(0, "4");
-//    }
-//
-//    @Test(description = "Verify reducing quantity for multiple products updates the cart correctly.")
-//    public void should_reduce_quantity_for_multiple_products_work_test() {
-//        var bookNames = BookStoreDB.getDb().selectActiveProducts().stream().map(PostRecord::getName).toList();
-//        var bookName1 = bookNames.get(0);
-//        var bookName2 = bookNames.get(1);
-//
-//        mainPage
-//                .addToCart(bookName1)
-//                .closePreviewCart()
-//                .addToCart(bookName2)
-//                .closePreviewCart()
-//                .getNavigationBar()
-//                .clickCartPageButton()
-//                .viewMyCart()
-//                .increaseQuantityOfProductBy(0, 2)
-//                .reduceQuantityOfProductBy(0, 2)
-//                .increaseQuantityOfProductBy(1, 4)
-//                .reduceQuantityOfProductBy(1, 2)
-//                .updateCart()
-//                .assertQuantityIs(0, "1")
-//                .assertQuantityIs(1, "3");
-//    }
-//
-//    @Test(description = "Verify that entering a specific quantity directly into the input works as expected.")
-//    public void should_input_quantity_for_product_work_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .inputQuantityAs(0, "55")
-//                .updateCart()
-//                .assertQuantityIs(0, "55");
-//    }
-//
-//    @Test(description = "Verify that changing quantity updates the product subtotal correctly.")
-//    public void should_update_quantity_update_subtotal_for_product_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .inputQuantityAs(0, "5")
-//                .updateCart()
-//                .assertSubTotalChangedToExpected(0);
-//    }
+
+    @Test(description = "Verify that 'Update Cart' button is disabled before any change.")
+    public void should_update_cart_without_prior_updated_be_disabled_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+
+        assertThat(store().cartPage().getUpdateCartButton().isDisabled()).isTrue();
+    }
+
+    @Test(description = "Verify increasing quantity for one product is correctly reflected in the cart.")
+    public void should_increase_quantity_for_one_product_work_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().increaseQuantityOfProductBy(0,2);
+        store().cartPage().updateCart();
+        store().cartPage().waitForCartPage();
+
+        assertThat(store().cartPage().getQuantityFields().nth(0).getAttribute("value")).isEqualTo("3");
+    }
+
+    @Test(description = "Verify increasing quantity for multiple products is correctly updated.")
+    public void should_increase_quantity_for_multiple_products_work_test() {
+        var bookNames = BookStoreDB.getDb().selectActiveProducts().stream().map(PostRecord::getName).toList();
+        var bookName1 = bookNames.get(0);
+        var bookName2 = bookNames.get(1);
+
+        store().mainPage().addToCart(bookName1);
+        store().previewCartPage().closePreview();
+        store().mainPage().addToCart(bookName2);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().increaseQuantityOfProductBy(0,2);
+        store().cartPage().increaseQuantityOfProductBy(1,4);
+        store().cartPage().updateCart();
+        store().cartPage().waitForCartPage();
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(store().cartPage().getQuantityFields().nth(0).getAttribute("value"))
+                    .isEqualTo("3");
+            softly.assertThat(store().cartPage().getQuantityFields().nth(1).getAttribute("value"))
+                    .isEqualTo("5");
+        });
+    }
+
+    @Test(description = "Verify reducing quantity for a single product updates correctly.")
+    public void should_reduce_quantity_for_one_product_work_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().increaseQuantityOfProductBy(0,9);
+        store().cartPage().decreaseQuantityOfProductBy(0,5);
+        store().cartPage().updateCart();
+        store().cartPage().waitForCartPage();
+
+        assertThat(store().cartPage().getQuantityFields().nth(0).getAttribute("value")).isEqualTo("5");
+    }
+
+    @Test(description = "Verify reducing quantity for multiple products updates the cart correctly.")
+    public void should_reduce_quantity_for_multiple_products_work_test() {
+        var bookNames = BookStoreDB.getDb().selectActiveProducts().stream().map(PostRecord::getName).toList();
+        var bookName1 = bookNames.get(0);
+        var bookName2 = bookNames.get(1);
+
+        store().mainPage().addToCart(bookName1);
+        store().previewCartPage().closePreview();
+        store().mainPage().addToCart(bookName2);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().increaseQuantityOfProductBy(0,2);
+        store().cartPage().decreaseQuantityOfProductBy(0,1);
+        store().cartPage().increaseQuantityOfProductBy(1,4);
+        store().cartPage().decreaseQuantityOfProductBy(1,2);
+        store().cartPage().updateCart();
+        store().cartPage().waitForCartPage();
+
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(store().cartPage().getQuantityFields().nth(0).getAttribute("value"))
+                    .isEqualTo("2");
+            softly.assertThat(store().cartPage().getQuantityFields().nth(1).getAttribute("value"))
+                    .isEqualTo("3");
+        });
+    }
+
+    @Test(description = "Verify that entering a specific quantity directly into the input works as expected.")
+    public void should_input_quantity_for_product_work_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().setQuantityOfProductTo(0,55);
+        store().cartPage().updateCart();
+        store().cartPage().waitForCartPage();
+
+        assertThat(store().cartPage().getQuantityFields().nth(0).getAttribute("value")).isEqualTo("55");
+    }
+
+    @Test(description = "Verify that changing quantity updates the product subtotal correctly.")
+    public void should_update_quantity_update_subtotal_for_product_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().setQuantityOfProductTo(0,55);
+        store().cartPage().updateCart();
+        store().cartPage().waitForCartPage();
+
+        var quantity = store().cartPage().getQuantityForProductAtIndex(0);
+        var price = store().cartPage().getPriceForProductAtIndex(0);
+        var expectedSubtotal = quantity * price;
+
+        var actualSubtotal = store().cartPage().getSubtotalForProductAtIndex(0);
+
+        assertThat(actualSubtotal)
+                .as("Subtotal for product does not match expected value")
+                .isEqualTo(expectedSubtotal);
+    }
 //
 //    @Test(description = "Ensure the total cart amount updates correctly after quantity changes.")
 //    public void should_update_quantity_update_cart_total_test() {
