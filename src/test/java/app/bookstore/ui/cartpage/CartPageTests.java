@@ -1,14 +1,17 @@
 package app.bookstore.ui.cartpage;
 
+import app.bookstore.api.coupon.CouponResponse;
 import app.bookstore.api.coupon.PostCouponRequest;
 import app.bookstore.db.BookStoreDB;
 import app.bookstore.db.models.PostRecord;
 import app.bookstore.ui.BaseUiTest;
+import app.bookstore.ui.helpers.PlaywrightManager;
 import app.bookstore.ui.helpers.UiAssertions;
 import app.bookstore.ui.helpers.navigation.AppPage;
 import app.bookstore.ui.pages.CartPage;
 import io.qameta.allure.Epic;
 import org.assertj.core.api.SoftAssertions;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -207,57 +210,74 @@ public class CartPageTests extends BaseUiTest {
                 .as("Subtotal for product does not match expected value")
                 .isEqualTo(expectedSubtotal);
     }
-//
-//    @Test(description = "Ensure the total cart amount updates correctly after quantity changes.")
-//    public void should_update_quantity_update_cart_total_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .inputQuantityAs(0, "5")
-//                .updateCart()
-//                .assertCartTotalsChangedAsExpected(0);
-//    }
-//
-//    @Test(description = "Verify a correct coupon code is applied successfully.")
-//    public void should_correct_coupon_work_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .inputCouponCodeAs("testCoupon")
-//                .applyCoupon()
-//                .assertMessageIs("Coupon code applied successfully.");
-//    }
-//
-//    @Test(description = "Verify using an invalid coupon code results in appropriate error message.")
-//    public void should_incorrect_coupon_work_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//        var couponCode = "incorrectCoupon";
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .inputCouponCodeAs(couponCode)
-//                .applyCoupon()
-//                .assertErrorIs(String.format("Coupon \"%s\" does not exist!", couponCode));
-//    }
-//
-//    @Test(description = "Verify that clicking 'Proceed to Checkout' navigates to the checkout page.")
-//    public void should_proceed_to_checkout_work_test() {
-//        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
-//
-//        mainPage
-//                .goToCartPageWithProductAs(bookName)
-//                .proceedToCheckout()
-//                .assertCheckoutTextIsDisplayed();
-//    }
-//
-//    @AfterClass
-//    public void cleanUp() {
-//        var couponIds = controller.getCoupon().stream().map(CouponResponse::getId).toList();
-//
-//        if (!couponIds.isEmpty()) {
-//            couponIds.forEach(coupon -> controller.deleteCouponResponse(coupon, true));
-//        }
-//    }
+
+    @Test(description = "Ensure the total cart amount updates correctly after quantity changes.")
+    public void should_update_quantity_update_cart_total_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().setQuantityOfProductTo(0,55);
+        store().cartPage().updateCart();
+        store().cartPage().waitForCartPage();
+
+        var quantity = store().cartPage().getQuantityForProductAtIndex(0);
+        var price = store().cartPage().getPriceForProductAtIndex(0);
+        var expectedSubtotal = quantity * price;
+
+        var actualCartsTotal = store().cartPage().getCartsTotalForProductAtIndex(0);
+
+        assertThat(actualCartsTotal)
+                .as("Subtotal for product does not match expected value")
+                .isEqualTo(expectedSubtotal);
+    }
+
+    @Test(description = "Verify a correct coupon code is applied successfully.")
+    public void should_correct_coupon_work_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().inputCouponCodeAs("testCoupon");
+        store().cartPage().applyCoupon();
+
+        assertThat(store().notifications().getSuccessMessage().innerText()).isEqualTo("Coupon code applied successfully.");
+    }
+
+    @Test(description = "Verify using an invalid coupon code results in appropriate error message.")
+    public void should_incorrect_coupon_work_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+        var couponCode = "incorrect_coupon";
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().inputCouponCodeAs(couponCode);
+        store().cartPage().applyCoupon();
+
+        assertThat(store().notifications().getErrorMessage().innerText()).isEqualTo((String.format("Coupon \"%s\" does not exist!", couponCode)));
+    }
+
+    @Test(description = "Verify that clicking 'Proceed to Checkout' navigates to the checkout page.")
+    public void should_proceed_to_checkout_work_test() {
+        var bookName = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+
+        store().mainPage().addToCart(bookName);
+        store().previewCartPage().waitForPreviewCart();
+        store().navigation().goTo(AppPage.CART);
+        store().cartPage().proceedToCheckout();
+
+        assertThat(PlaywrightManager.getPage().url()).contains("/checkout");
+    }
+
+    @AfterClass
+    public void cleanUp() {
+        var couponIds = controller().getCoupons().stream().map(CouponResponse::getId).toList();
+
+        if (!couponIds.isEmpty()) {
+            couponIds.forEach(coupon -> controller().deleteCouponsResponse(coupon));
+        }
+    }
 }

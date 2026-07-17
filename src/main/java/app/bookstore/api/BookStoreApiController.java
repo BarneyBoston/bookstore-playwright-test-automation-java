@@ -130,17 +130,34 @@ public class BookStoreApiController {
 
     // ── COUPONS ──────────────────────────────────────────
 
+    @Step("GET " + COUPONS)
+    public APIResponse getCouponsResponse() {
+        return executeRequest("GET", baseUri + COUPONS,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("GET", COUPONS)), null);
+    }
+
+    public List<CouponResponse> getCoupons() {
+        return deserializeList(getCouponsResponse(), CouponResponse.class);
+    }
+
     @Step("POST " + COUPONS)
     public APIResponse postCouponsResponse(PostCouponRequest body) {
         String bodyJson = toJson(body);
         return executeRequest("POST", baseUri + COUPONS,
                 RequestOptions.create()
-                        .setHeader("Authorization", auth("POST", PRODUCTS))
+                        .setHeader("Authorization", auth("POST", COUPONS))
                         .setData(bodyJson), bodyJson);
     }
 
     public CouponResponse postCoupon(PostCouponRequest body) {
         return deserialize(postCouponsResponse(body), CouponResponse.class);
+    }
+
+    @Step("DELETE " + COUPONS + "/{id}")
+    public APIResponse deleteCouponsResponse(String id) {
+        return executeRequest("DELETE", baseUri + COUPONS + "/" + id,
+                RequestOptions.create().setHeader("Authorization", auth("DELETE", COUPONS + "/" + id)), null);
     }
 
     // ── HELPERS ──────────────────────────────────────────

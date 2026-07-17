@@ -21,6 +21,10 @@ public class CartPage extends BasePage {
     private final Locator updateCartButton;
     private final Locator cartTablePrices;
     private final Locator cartTableSubtotals;
+    private final Locator cartTotalsPrices;
+    private final Locator couponCodeTextArea;
+    private final Locator applyCouponButton;
+    private final Locator proceedToCheckoutButton;
 
     public CartPage(Page page) {
         super(page);
@@ -33,6 +37,10 @@ public class CartPage extends BasePage {
         this.updateCartButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Update cart"));
         this.cartTablePrices = page.locator(".product-price .amount");
         this.cartTableSubtotals = page.locator(".cart_item [data-title='Subtotal'] .amount");
+        this.cartTotalsPrices = page.locator(".cart_totals .amount");
+        this.couponCodeTextArea = page.getByRole(AriaRole.TEXTBOX, new Page.GetByRoleOptions().setName("Coupon:"));
+        this.applyCouponButton = page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Apply coupon"));
+        this.proceedToCheckoutButton = page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Proceed to checkout"));
     }
 
     @Step("Set quantity of product at index {index} to {to}")
@@ -78,6 +86,26 @@ public class CartPage extends BasePage {
     @Step("Get subtotal for product at index {index}")
     public Double getSubtotalForProductAtIndex(int index){
         return Double.parseDouble(cartTableSubtotals.nth(index).innerText().replaceAll("[^0-9.,]", "").replace(",", ".").trim());
+    }
+
+    @Step("Get carts total for product at index {index}")
+    public Double getCartsTotalForProductAtIndex(int index){
+        return Double.parseDouble(cartTotalsPrices.nth(index).innerText().replaceAll("[^0-9.,]", "").replace(",", ".").trim());
+    }
+
+    @Step("Input coupon code as: {couponCode}")
+    public void inputCouponCodeAs(String couponCode){
+        couponCodeTextArea.fill(couponCode);
+    }
+
+    @Step("Apply coupon")
+    public void applyCoupon(){
+        applyCouponButton.click();
+    }
+
+    @Step("Proceed to checkout")
+    public void proceedToCheckout(){
+        proceedToCheckoutButton.click();
     }
 
 }
