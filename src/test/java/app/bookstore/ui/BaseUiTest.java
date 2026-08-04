@@ -2,6 +2,8 @@ package app.bookstore.ui;
 
 import app.bookstore.api.BookStoreApiController;
 import app.bookstore.db.BookStoreDB;
+import app.bookstore.helpers.Config;
+import app.bookstore.ui.helpers.BrowserFactory;
 import app.bookstore.ui.helpers.NoSuchBrowserException;
 import app.bookstore.ui.helpers.PlaywrightManager;
 import app.bookstore.ui.pages.helpers.Store;
@@ -14,8 +16,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
-import app.bookstore.helpers.Config;
-import app.bookstore.ui.helpers.BrowserFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +74,8 @@ public abstract class BaseUiTest {
             }
         }
 
-        BrowserContext browserContext = browser.newContext();
+        BrowserContext browserContext = browser.newContext(new Browser.NewContextOptions()
+                .setViewportSize(null));
         try {
             Page targetPage = browserContext.newPage();
             PlaywrightManager.setBrowserContext(browserContext);

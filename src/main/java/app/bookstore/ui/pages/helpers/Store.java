@@ -2,6 +2,7 @@ package app.bookstore.ui.pages.helpers;
 
 import app.bookstore.ui.helpers.navigation.NavigationHelper;
 import app.bookstore.ui.pages.CartPage;
+import app.bookstore.ui.pages.CheckoutPage;
 import app.bookstore.ui.pages.MainPage;
 import app.bookstore.ui.pages.PreviewCartPage;
 import com.microsoft.playwright.Page;
@@ -15,6 +16,7 @@ public class Store {
     private NavigationBar navigationBar;
     private CartPage cartPage;
     private Notifications notifications;
+    private CheckoutPage checkoutPage;
 
     public Store(Page page) {
         this.page = page;
@@ -58,5 +60,12 @@ public class Store {
             notifications = new Notifications(page);
         }
         return notifications;
+    }
+
+    public CheckoutPage checkoutPage() {
+        if (checkoutPage == null) {
+            checkoutPage = new CheckoutPage(page);
+        }
+        return checkoutPage;
     }
 }

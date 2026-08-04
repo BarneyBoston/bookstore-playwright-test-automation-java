@@ -5,6 +5,8 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Playwright;
 
+import java.util.List;
+
 public abstract class BrowserFactory {
     private BrowserFactory() {
         /* This utility class should not be instantiated */
@@ -17,7 +19,7 @@ public abstract class BrowserFactory {
 
     public static Browser getBrowser(Playwright playwright, String browserName) throws NoSuchBrowserException {
 
-        BrowserType.LaunchOptions options = new BrowserType.LaunchOptions().setHeadless(isHeadless());
+        BrowserType.LaunchOptions options = new BrowserType.LaunchOptions().setHeadless(isHeadless()).setArgs(List.of("--start-maximized"));
 
         switch (browserName.toLowerCase()) {
             case "chrome", "chromium" -> {

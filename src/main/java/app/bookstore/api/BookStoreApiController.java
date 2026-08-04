@@ -2,6 +2,8 @@ package app.bookstore.api;
 
 import app.bookstore.api.coupon.CouponResponse;
 import app.bookstore.api.coupon.PostCouponRequest;
+import app.bookstore.api.orders.OrdersResponse;
+import app.bookstore.api.orders.PostOrdersRequest;
 import app.bookstore.api.product.ProductRequest;
 import app.bookstore.api.product.ProductResponse;
 import app.bookstore.helpers.Config;
@@ -10,10 +12,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.options.RequestOptions;
-import io.qameta.allure.Step;
 import io.qameta.allure.Allure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.qameta.allure.Step;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.exception.OAuthException;
@@ -21,6 +21,8 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -160,15 +162,47 @@ public class BookStoreApiController {
                 RequestOptions.create().setHeader("Authorization", auth("DELETE", COUPONS + "/" + id)), null);
     }
 
+    // ── ORDERS ──────────────────────────────────────────
+
+    @Step("GET " + ORDERS)
+    public APIResponse getOrdersResponse() {
+        return executeRequest("GET", baseUri + ORDERS,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("GET", ORDERS)), null);
+    }
+
+    public List<OrdersResponse> getOrders() {
+        return deserializeList(getOrdersResponse(), OrdersResponse.class);
+    }
+
+    @Step("POST " + ORDERS)
+    public APIResponse postOrdersResponse(PostOrdersRequest body) {
+        String bodyJson = toJson(body);
+        return executeRequest("POST", baseUri + ORDERS,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("POST", ORDERS))
+                        .setData(bodyJson), bodyJson);
+    }
+
+    public OrdersResponse postOrder(PostOrdersRequest body) {
+        return deserialize(postOrdersResponse(body), OrdersResponse.class);
+    }
+
+    @Step("DELETE " + ORDERS + "/{id}")
+    public APIResponse deleteOrdersResponse(String id) {
+        return executeRequest("DELETE", baseUri + ORDERS + "/" + id,
+                RequestOptions.create().setHeader("Authorization", auth("DELETE", ORDERS + "/" + id)), null);
+    }
+
     // ── HELPERS ──────────────────────────────────────────
 
     /**
      * Execute HTTP request via Playwright's APIRequestContext and log request/response
      * both to stdout and as Allure attachments so logs are available locally and in CI reports.
      *
-     * @param method  HTTP method (GET/POST/PUT/DELETE)
-     * @param url     full URL
-     * @param options RequestOptions instance (can be null)
+     * @param method      HTTP method (GET/POST/PUT/DELETE)
+     * @param url         full URL
+     * @param options     RequestOptions instance (can be null)
      * @param requestBody optional serialized request body (null if none)
      * @return APIResponse returned by Playwright
      */
@@ -183,18 +217,18 @@ public class BookStoreApiController {
             }
 
             String reqContent = reqLog.toString();
-                    Allure.addAttachment("API Request - " + shortRequest, reqContent);
-                    if (log.isInfoEnabled()) {
-                        log.info("API Request - {}\n{}", shortRequest, reqContent);
-                    }
+            Allure.addAttachment("API Request - " + shortRequest, reqContent);
+            if (log.isInfoEnabled()) {
+                log.info("API Request - {}\n{}", shortRequest, reqContent);
+            }
 
-                    APIResponse response = switch (method.toUpperCase()) {
-                        case "GET" -> request.get(url, options);
-                        case "POST" -> request.post(url, options);
-                        case "PUT" -> request.put(url, options);
-                        case "DELETE" -> request.delete(url, options);
-                        default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
-                    };
+            APIResponse response = switch (method.toUpperCase()) {
+                case "GET" -> request.get(url, options);
+                case "POST" -> request.post(url, options);
+                case "PUT" -> request.put(url, options);
+                case "DELETE" -> request.delete(url, options);
+                default -> throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+            };
 
             String responseBody = getResponseTextSafe(response);
 

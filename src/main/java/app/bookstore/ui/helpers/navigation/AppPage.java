@@ -7,7 +7,8 @@ public enum AppPage {
     WISHLIST("/wishlist/"),
     PRODUCT("/product/%s"),
     COUPON("/coupons"),
-    CART("/cart");
+    CART("/cart"),
+    CHECKOUT("/checkout");
 
     private final String pathTemplate;
 
