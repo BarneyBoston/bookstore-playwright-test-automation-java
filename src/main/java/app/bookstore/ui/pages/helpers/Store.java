@@ -15,6 +15,7 @@ public class Store {
     private Notifications notifications;
     private CheckoutPage checkoutPage;
     private LostPasswordPage lostPasswordPage;
+    private MyAccountPage myAccountPage;
 
     public Store(Page page) {
         this.page = page;
@@ -72,5 +73,12 @@ public class Store {
             lostPasswordPage = new LostPasswordPage(page);
         }
         return lostPasswordPage;
+    }
+
+    public MyAccountPage myAccountPage() {
+        if (myAccountPage == null) {
+            myAccountPage = new MyAccountPage(page);
+        }
+        return myAccountPage;
     }
 }

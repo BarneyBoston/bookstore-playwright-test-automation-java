@@ -12,18 +12,13 @@ public class LostPasswordPageTests extends BaseUiTest {
 
     @Test(description = "Verify that Lost Password page displays all expected elements")
     public void should_lost_password_page_have_all_expected_elements_test() {
-        SoftAssertions softAssertions = new SoftAssertions();
-
         store().navigation().goTo(AppPage.LOST_PASSWORD);
 
-        softAssertions.assertThat(store().lostPasswordPage().getEntryTitleText().innerText())
-                .isEqualTo("Lost password");
-        softAssertions.assertThat(store().lostPasswordPage().getUsernameOrEmailField().isEnabled())
-                .isTrue();
-        softAssertions.assertThat(store().lostPasswordPage().getResetPasswordButton().isEnabled())
-                .isTrue();
-
-        softAssertions.assertAll();
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(store().lostPasswordPage().getUsernameOrEmailField().isEnabled()).isTrue();
+            softly.assertThat(store().lostPasswordPage().getResetPasswordButton().isEnabled()).isTrue();
+            softly.assertThat(store().lostPasswordPage().getEntryTitleText().innerText()).isEqualTo("Lost password");
+        });
     }
 
     @Test(description = "Verify that submitting incorrect username or email shows error message")
