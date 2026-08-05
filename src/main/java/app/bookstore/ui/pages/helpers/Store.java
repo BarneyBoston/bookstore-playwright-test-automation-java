@@ -1,10 +1,7 @@
 package app.bookstore.ui.pages.helpers;
 
 import app.bookstore.ui.helpers.navigation.NavigationHelper;
-import app.bookstore.ui.pages.CartPage;
-import app.bookstore.ui.pages.CheckoutPage;
-import app.bookstore.ui.pages.MainPage;
-import app.bookstore.ui.pages.PreviewCartPage;
+import app.bookstore.ui.pages.*;
 import com.microsoft.playwright.Page;
 
 public class Store {
@@ -17,6 +14,7 @@ public class Store {
     private CartPage cartPage;
     private Notifications notifications;
     private CheckoutPage checkoutPage;
+    private LostPasswordPage lostPasswordPage;
 
     public Store(Page page) {
         this.page = page;
@@ -67,5 +65,12 @@ public class Store {
             checkoutPage = new CheckoutPage(page);
         }
         return checkoutPage;
+    }
+
+    public LostPasswordPage lostPasswordPage() {
+        if (lostPasswordPage == null) {
+            lostPasswordPage = new LostPasswordPage(page);
+        }
+        return lostPasswordPage;
     }
 }

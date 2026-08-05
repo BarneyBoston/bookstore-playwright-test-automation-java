@@ -14,53 +14,97 @@ import java.time.format.DateTimeFormatter;
 @Getter
 public class CheckoutPage extends BasePage {
 
-    public CheckoutPage(Page page) {
-        super(page);
-    }
-
     // Headers
-    private final Locator checkoutText = page.locator("//h1[text()='Checkout']");
-    private final Locator orderReceivedMessage = page.locator("//h1[text()='Order received']");
+    private final Locator checkoutText;
+    private final Locator orderReceivedMessage;
 
     // Buttons / Links
-    private final Locator clickHereToLoginButton = page.locator(".showlogin");
-    private final Locator clickHereToEnterYourCodeButton = page.locator(".showcoupon");
-    private final Locator applyCouponButton = page.locator("[name='apply_coupon']");
-    private final Locator placeOrderButton = page.locator("#place_order");
+    private final Locator clickHereToLoginButton;
+    private final Locator clickHereToEnterYourCodeButton;
+    private final Locator applyCouponButton;
+    private final Locator placeOrderButton;
 
     // Login
-    private final Locator usernameOrEmailField = page.locator("#username");
-    private final Locator passwordField = page.locator("#password");
+    private final Locator usernameOrEmailField;
+    private final Locator passwordField;
 
     // Coupon
-    private final Locator couponCodeField = page.locator("#coupon_code");
+    private final Locator couponCodeField;
 
     // Sections
-    private final Locator billingDetailsSection = page.locator(".woocommerce-billing-fields");
-    private final Locator additionalInformationSection = page.locator(".woocommerce-additional-fields");
-    private final Locator checkoutOrderSection = page.locator(".woocommerce-checkout-review-order");
+    private final Locator billingDetailsSection;
+    private final Locator additionalInformationSection;
+    private final Locator checkoutOrderSection;
 
     // Billing Details
-    private final Locator firstNameField = page.locator("#billing_first_name");
-    private final Locator lastNameField = page.locator("#billing_last_name");
-    private final Locator houseNumberAndStreetNameField = page.locator("#billing_address_1");
-    private final Locator apartmentSuiteUnitField = page.locator("#billing_address_2");
-    private final Locator postcodeField = page.locator("#billing_postcode");
-    private final Locator townField = page.locator("#billing_city");
-    private final Locator phoneField = page.locator("#billing_phone");
-    private final Locator emailField = page.locator("#billing_email");
+    private final Locator firstNameField;
+    private final Locator lastNameField;
+    private final Locator houseNumberAndStreetNameField;
+    private final Locator apartmentSuiteUnitField;
+    private final Locator postcodeField;
+    private final Locator townField;
+    private final Locator phoneField;
+    private final Locator emailField;
 
     // Error messages
-    private final Locator cardErrorMessage = page.locator(".woocommerce_error");
-    private final Locator detailsErrorMessage = page.locator(".woocommerce-error");
+    private final Locator cardErrorMessage;
+    private final Locator detailsErrorMessage;
 
     // Stripe iframes
-    private final Locator cardNumberFrame = page.locator("[title='Secure card number input frame']");
-    private final Locator expiryDateFrame = page.locator("[title='Secure expiration date input frame']");
-    private final Locator cvcFrame = page.locator("[title='Secure CVC input frame']");
+    private final Locator cardNumberFrame;
+    private final Locator expiryDateFrame;
+    private final Locator cvcFrame;
 
     // Overlay
-    private final Locator overlay = page.locator("div.blockUI.blockOverlay");
+    private final Locator overlay;
+
+    public CheckoutPage(Page page) {
+        super(page);
+
+        // Headers
+        this.checkoutText = page.locator("//h1[text()='Checkout']");
+        this.orderReceivedMessage = page.locator("//h1[text()='Order received']");
+
+        // Buttons / Links
+        this.clickHereToLoginButton = page.locator(".showlogin");
+        this.clickHereToEnterYourCodeButton = page.locator(".showcoupon");
+        this.applyCouponButton = page.locator("[name='apply_coupon']");
+        this.placeOrderButton = page.locator("#place_order");
+
+        // Login
+        this.usernameOrEmailField = page.locator("#username");
+        this.passwordField = page.locator("#password");
+
+        // Coupon
+        this.couponCodeField = page.locator("#coupon_code");
+
+        // Sections
+        this.billingDetailsSection = page.locator(".woocommerce-billing-fields");
+        this.additionalInformationSection = page.locator(".woocommerce-additional-fields");
+        this.checkoutOrderSection = page.locator(".woocommerce-checkout-review-order");
+
+        // Billing Details
+        this.firstNameField = page.locator("#billing_first_name");
+        this.lastNameField = page.locator("#billing_last_name");
+        this.houseNumberAndStreetNameField = page.locator("#billing_address_1");
+        this.apartmentSuiteUnitField = page.locator("#billing_address_2");
+        this.postcodeField = page.locator("#billing_postcode");
+        this.townField = page.locator("#billing_city");
+        this.phoneField = page.locator("#billing_phone");
+        this.emailField = page.locator("#billing_email");
+
+        // Error messages
+        this.cardErrorMessage = page.locator(".woocommerce_error");
+        this.detailsErrorMessage = page.locator(".woocommerce-error");
+
+        // Stripe iframes
+        this.cardNumberFrame = page.locator("[title='Secure card number input frame']");
+        this.expiryDateFrame = page.locator("[title='Secure expiration date input frame']");
+        this.cvcFrame = page.locator("[title='Secure CVC input frame']");
+
+        // Overlay
+        this.overlay = page.locator("div.blockUI.blockOverlay");
+    }
 
     @Step("Click here to login")
     public void clickHereToLogin() {
