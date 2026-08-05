@@ -20,13 +20,13 @@ public class MyAccountPage extends BasePage {
 
     public MyAccountPage(Page page) {
         super(page);
-        usernameField = page.locator("#username");
-        passwordField = page.locator("#password");
-        loginButton = page.locator("[name='login']");
-        lostPasswordLink = page.locator(".lost_password a");
-        rememberMeBox = page.locator("#rememberme");
-        successfulLoginNoticeText = page.locator(".woocommerce-notices-wrapper + p");
-        incorrectLoginMessageText = page.locator(".woocommerce-error li");
+        this.usernameField = page.locator("#username");
+        this.passwordField = page.locator("#password");
+        this.loginButton = page.locator("[name='login']");
+        this.lostPasswordLink = page.locator(".lost_password a");
+        this.rememberMeBox = page.locator("#rememberme");
+        this.successfulLoginNoticeText = page.locator(".woocommerce-notices-wrapper + p");
+        this.incorrectLoginMessageText = page.locator(".woocommerce-error li");
     }
 
     @Step("Login as admin")

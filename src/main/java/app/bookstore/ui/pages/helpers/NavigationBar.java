@@ -3,6 +3,7 @@ package app.bookstore.ui.pages.helpers;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
+import io.qameta.allure.Step;
 import lombok.Getter;
 
 @Getter
@@ -20,5 +21,9 @@ public class NavigationBar extends BasePage {
         this.wishlistPageButton = page.getByRole(AriaRole.LINK, new Page.GetByRoleOptions().setName("Wishlist").setExact(true));
     }
 
+    @Step("Go to preview cart")
+    public void goToPreviewCart() {
+        cartPageButton.click();
+    }
 
 }

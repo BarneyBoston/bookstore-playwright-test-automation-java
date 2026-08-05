@@ -19,11 +19,11 @@ public class LostPasswordPage extends BasePage {
 
     public LostPasswordPage(Page page) {
         super(page);
-        entryTitleText = page.locator(".entry-title");
-        usernameOrEmailField = page.locator("#user_login");
-        resetPasswordButton = page.locator("[value='Reset password']");
-        errorMessageText = page.locator(".woocommerce-error li");
-        successfulMessageText = page.locator(".woocommerce-message");
+        this.entryTitleText = page.locator(".entry-title");
+        this.usernameOrEmailField = page.locator("#user_login");
+        this.resetPasswordButton = page.locator("[value='Reset password']");
+        this.errorMessageText = page.locator(".woocommerce-error li");
+        this.successfulMessageText = page.locator(".woocommerce-message");
     }
 
     @Step("Input username or email as {username}")
