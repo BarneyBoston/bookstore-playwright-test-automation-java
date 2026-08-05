@@ -2,6 +2,8 @@ package app.bookstore.ui.pages.helpers;
 
 import app.bookstore.ui.helpers.navigation.NavigationHelper;
 import app.bookstore.ui.pages.*;
+import app.bookstore.ui.pages.productpage.ProductPage;
+import app.bookstore.ui.pages.productpage.ReviewTab;
 import com.microsoft.playwright.Page;
 
 public class Store {
@@ -16,6 +18,9 @@ public class Store {
     private CheckoutPage checkoutPage;
     private LostPasswordPage lostPasswordPage;
     private MyAccountPage myAccountPage;
+    private ProductPage productPage;
+    private WishlistPage wishlistPage;
+    private ReviewTab reviewTab;
 
     public Store(Page page) {
         this.page = page;
@@ -80,5 +85,26 @@ public class Store {
             myAccountPage = new MyAccountPage(page);
         }
         return myAccountPage;
+    }
+
+    public ProductPage productPage() {
+        if (productPage == null) {
+            productPage = new ProductPage(page);
+        }
+        return productPage;
+    }
+
+    public WishlistPage wishlistPage() {
+        if (wishlistPage == null) {
+            wishlistPage = new WishlistPage(page);
+        }
+        return wishlistPage;
+    }
+
+    public ReviewTab reviewTab() {
+        if (reviewTab == null) {
+            reviewTab = new ReviewTab(page);
+        }
+        return reviewTab;
     }
 }

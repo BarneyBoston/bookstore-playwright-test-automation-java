@@ -24,7 +24,7 @@ public class MainPageTests extends BaseUiTest {
 
     @Test(description = "Verify searching a product redirects to the product page")
     public void should_search_product_redirect_to_product_page() {
-        var dbTitle = BookStoreDB.getDb().selectRandomActiveProduct().getName();
+        var dbTitle = BookStoreDB.getDb().selectActiveProducts().getLast().getName();
 
         store().mainPage().searchForProduct(dbTitle);
 

@@ -6,6 +6,7 @@ import app.bookstore.api.orders.OrdersResponse;
 import app.bookstore.api.orders.PostOrdersRequest;
 import app.bookstore.api.product.ProductRequest;
 import app.bookstore.api.product.ProductResponse;
+import app.bookstore.api.product.ProductReviewResponse;
 import app.bookstore.helpers.Config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -192,6 +193,25 @@ public class BookStoreApiController {
     public APIResponse deleteOrdersResponse(String id) {
         return executeRequest("DELETE", baseUri + ORDERS + "/" + id,
                 RequestOptions.create().setHeader("Authorization", auth("DELETE", ORDERS + "/" + id)), null);
+    }
+
+    // ── REVIEWS ──────────────────────────────────────────
+
+    @Step("GET " + REVIEWS)
+    public APIResponse getReviewsResponse() {
+        return executeRequest("GET", baseUri + REVIEWS,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("GET", REVIEWS)), null);
+    }
+
+    public List<ProductReviewResponse> getReviews() {
+        return deserializeList(getOrdersResponse(), ProductReviewResponse.class);
+    }
+
+    @Step("DELETE " + REVIEWS + "/{id}")
+    public APIResponse deleteReviewsResponse(String id) {
+        return executeRequest("DELETE", baseUri + REVIEWS + "/" + id,
+                RequestOptions.create().setHeader("Authorization", auth("DELETE", REVIEWS + "/" + id)), null);
     }
 
     // ── HELPERS ──────────────────────────────────────────

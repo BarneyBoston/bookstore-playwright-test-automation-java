@@ -26,4 +26,9 @@ public class NavigationBar extends BasePage {
         cartPageButton.click();
     }
 
+    @Step("Go to wishlist")
+    public void goToWishlist() {
+        wishlistPageButton.click();
+    }
+
 }
