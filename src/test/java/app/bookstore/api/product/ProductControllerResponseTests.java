@@ -1,17 +1,15 @@
-package app.bookstore.rest.product;
+package app.bookstore.api.product;
 
-import app.bookstore.api.product.ProductRequest;
-import app.bookstore.api.product.ProductResponse;
 import app.bookstore.db.BookStoreDB;
 import app.bookstore.db.models.ProductRecord;
-import app.bookstore.rest.BaseRestTest;
+import app.bookstore.api.BaseApiTest;
 import io.qameta.allure.Epic;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 @Epic("Product Controller Response Tests")
-public class ProductControllerResponseTests extends BaseRestTest {
+public class ProductControllerResponseTests extends BaseApiTest {
 
     @Test(description = "Verify GET /products endpoint returns status 200")
     public void getProductResponseTest() {

@@ -5,7 +5,7 @@
     </listeners>
     <test name="REST">
         <packages>
-            <package name="app.bookstore.rest.*"/>
+            <package name="app.bookstore.api.*"/>
         </packages>
     </test>
     <test name="WEB">

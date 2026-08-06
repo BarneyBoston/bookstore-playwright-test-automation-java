@@ -2,8 +2,13 @@ package app.bookstore.api;
 
 import app.bookstore.api.coupon.CouponResponse;
 import app.bookstore.api.coupon.PostCouponRequest;
+import app.bookstore.api.coupon.UpdateCouponRequest;
+import app.bookstore.api.customers.CustomersRequest;
+import app.bookstore.api.customers.CustomersResponse;
+import app.bookstore.api.customers.UpdateCustomersRequest;
 import app.bookstore.api.orders.OrdersResponse;
 import app.bookstore.api.orders.PostOrdersRequest;
+import app.bookstore.api.orders.PutOrdersRequest;
 import app.bookstore.api.product.ProductRequest;
 import app.bookstore.api.product.ProductResponse;
 import app.bookstore.api.product.ProductReviewResponse;
@@ -157,6 +162,19 @@ public class BookStoreApiController {
         return deserialize(postCouponsResponse(body), CouponResponse.class);
     }
 
+    @Step("PUT " + COUPONS)
+    public APIResponse updateCouponsResponse(String id, UpdateCouponRequest body) {
+        String bodyJson = toJson(body);
+        return executeRequest("PUT", baseUri + COUPONS + "/" + id,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("PUT", COUPONS + "/" + id))
+                        .setData(bodyJson), bodyJson);
+    }
+
+    public CouponResponse updateCoupon(String id, UpdateCouponRequest body) {
+        return deserialize(updateCouponsResponse(id, body), CouponResponse.class);
+    }
+
     @Step("DELETE " + COUPONS + "/{id}")
     public APIResponse deleteCouponsResponse(String id) {
         return executeRequest("DELETE", baseUri + COUPONS + "/" + id,
@@ -185,8 +203,13 @@ public class BookStoreApiController {
                         .setData(bodyJson), bodyJson);
     }
 
-    public OrdersResponse postOrder(PostOrdersRequest body) {
-        return deserialize(postOrdersResponse(body), OrdersResponse.class);
+    @Step("PUT " + ORDERS)
+    public APIResponse updateOrdersResponse(String id, PutOrdersRequest body) {
+        String bodyJson = toJson(body);
+        return executeRequest("PUT", baseUri + ORDERS + "/" + id,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("PUT", ORDERS+ "/" + id))
+                        .setData(bodyJson), bodyJson);
     }
 
     @Step("DELETE " + ORDERS + "/{id}")
@@ -197,21 +220,55 @@ public class BookStoreApiController {
 
     // ── REVIEWS ──────────────────────────────────────────
 
-    @Step("GET " + REVIEWS)
-    public APIResponse getReviewsResponse() {
-        return executeRequest("GET", baseUri + REVIEWS,
-                RequestOptions.create()
-                        .setHeader("Authorization", auth("GET", REVIEWS)), null);
-    }
-
     public List<ProductReviewResponse> getReviews() {
         return deserializeList(getOrdersResponse(), ProductReviewResponse.class);
     }
 
     @Step("DELETE " + REVIEWS + "/{id}")
-    public APIResponse deleteReviewsResponse(String id) {
-        return executeRequest("DELETE", baseUri + REVIEWS + "/" + id,
+    public void deleteReviewsResponse(String id) {
+        executeRequest("DELETE", baseUri + REVIEWS + "/" + id,
                 RequestOptions.create().setHeader("Authorization", auth("DELETE", REVIEWS + "/" + id)), null);
+    }
+
+    // ── CUSTOMERS ──────────────────────────────────────────
+
+    @Step("GET " + CUSTOMERS)
+    public APIResponse getCustomersResponse() {
+        return executeRequest("GET", baseUri + CUSTOMERS,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("GET", CUSTOMERS)), null);
+    }
+
+    public List<CustomersResponse> getCustomers() {
+        return deserializeList(getCustomersResponse(), CustomersResponse.class);
+    }
+
+    @Step("POST " + CUSTOMERS)
+    public APIResponse postCustomersResponse(CustomersRequest body) {
+        String bodyJson = toJson(body);
+        return executeRequest("POST", baseUri + CUSTOMERS,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("POST", CUSTOMERS))
+                        .setData(bodyJson), bodyJson);
+    }
+
+    public CustomersResponse postCustomers(CustomersRequest body) {
+        return deserialize(postCustomersResponse(body), CustomersResponse.class);
+    }
+
+    @Step("PUT " + CUSTOMERS)
+    public APIResponse updateCustomersResponse(String id, UpdateCustomersRequest body) {
+        String bodyJson = toJson(body);
+        return executeRequest("PUT", baseUri + CUSTOMERS + "/" + id,
+                RequestOptions.create()
+                        .setHeader("Authorization", auth("PUT", CUSTOMERS+ "/" + id))
+                        .setData(bodyJson), bodyJson);
+    }
+
+    @Step("DELETE " + CUSTOMERS + "/{id}")
+    public APIResponse deleteCustomersResponse(String id) {
+        return executeRequest("DELETE", baseUri + CUSTOMERS + "/" + id,
+                RequestOptions.create().setHeader("Authorization", auth("DELETE", CUSTOMERS + "/" + id)), null);
     }
 
     // ── HELPERS ──────────────────────────────────────────

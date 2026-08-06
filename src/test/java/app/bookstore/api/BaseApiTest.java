@@ -1,6 +1,5 @@
-package app.bookstore.rest;
+package app.bookstore.api;
 
-import app.bookstore.api.BookStoreApiController;
 import app.bookstore.db.BookStoreDB;
 import com.microsoft.playwright.APIRequest;
 import com.microsoft.playwright.APIRequestContext;
@@ -17,13 +16,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class BaseRestTest {
+public abstract class BaseApiTest {
 
     private static final ThreadLocal<Playwright> playwrightThreadLocal = new ThreadLocal<>();
     private static final List<Playwright> allPlaywrightInstances = new CopyOnWriteArrayList<>();
     private static final ThreadLocal<APIRequestContext> requestThreadLocal = new ThreadLocal<>();
     private static final ThreadLocal<BookStoreApiController> controllerThreadLocal = new ThreadLocal<>();
-    public static final Logger log = LoggerFactory.getLogger(BaseRestTest.class);
+    public static final Logger log = LoggerFactory.getLogger(BaseApiTest.class);
 
 
     protected APIRequestContext request() {

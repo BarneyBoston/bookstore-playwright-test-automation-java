@@ -2,7 +2,9 @@ package app.bookstore.db.utils;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.ResultSet;
@@ -23,9 +25,13 @@ public class DBClient {
     }
 
     protected ObjectMapper configureMapper() {
-        return JsonMapper.builder()
+        ObjectMapper built = JsonMapper.builder()
+                .addModule(new JavaTimeModule())
                 .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
                 .build();
+        // Use ISO-8601 representation for java.time types instead of timestamps
+        built.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        return built;
     }
 
     public List<Record> getResultsForQuery(String sqlQuery) {
